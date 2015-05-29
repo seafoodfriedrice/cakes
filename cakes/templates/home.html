@@ -1,0 +1,19 @@
+{% import "macros.html" as macros %}
+{% extends "base.html" %}
+
+{% block body %}
+<h1>Products</h1>
+<table class="table table-hover table-condensed">
+    <tr>
+        <th>Brand</th>
+        <th>Category</th>
+        <th></th>
+        <th>Product Name</th>
+	<th>Color</th>
+        <th>Price</th>
+    </tr>
+    {% for product in products %}
+    {{ macros.render_product(product) }}
+    {% endfor %}
+</table>
+{% endblock %}
