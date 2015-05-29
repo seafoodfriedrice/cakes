@@ -18,7 +18,8 @@ class Product(Base):
     __tablename__ = "products"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(32))
+    name = Column(String(48))
+    color = Column(String(24))
     price = Column(Float)
     category_id = Column(Integer, ForeignKey('categories.id'))
     sub_category_id = Column(Integer, ForeignKey('sub_categories.id'))
