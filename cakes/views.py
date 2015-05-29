@@ -11,7 +11,8 @@ brands = session.query(Brand).order_by(Brand.name.asc()).all()
 categories = session.query(Category).order_by(Category.name.asc()).all()
 
 @app.route("/")
-def home():
+@app.route("/products")
+def products():
     products = session.query(Product).all()
-    return render_template("home.html", brands=brands, products=products,
+    return render_template("products.html", brands=brands, products=products,
                                         categories=categories)
