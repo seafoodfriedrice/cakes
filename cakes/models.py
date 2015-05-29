@@ -11,11 +11,11 @@ class Brand(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(24), nullable=False, unique=True)
-    items = relationship('Item', backref='brand')
+    products = relationship('Product', backref='brand')
 
 
-class Item(Base):
-    __tablename__ = "items"
+class Product(Base):
+    __tablename__ = "products"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(32))
@@ -23,7 +23,7 @@ class Item(Base):
     category_id = Column(Integer, ForeignKey('categories.id'))
     sub_category_id = Column(Integer, ForeignKey('sub_categories.id'))
     brand_id = Column(Integer, ForeignKey('brands.id'))
-    notes = relationship('Notes', backref='item')
+    notes = relationship('Notes', backref='Product')
 
 
 class Category(Base):
@@ -32,7 +32,7 @@ class Category(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(24), unique=True)
     sub_categories = relationship('SubCategory', backref='category')
-    items = relationship('Item', backref='category')
+    products = relationship('Product', backref='category')
 
 
 class SubCategory(Base):
@@ -41,7 +41,7 @@ class SubCategory(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(24), unique=True)
     category_id = Column(Integer, ForeignKey('categories.id'))
-    items = relationship('Item', backref='sub_category')
+    products = relationship('Product', backref='sub_category')
 
 
 class Notes(Base):
@@ -49,7 +49,7 @@ class Notes(Base):
     
     id = Column(Integer, primary_key=True)
     text = Column(String(256))
-    item_id = Column(Integer, ForeignKey('items.id'))
+    item_id = Column(Integer, ForeignKey('products.id'))
 
 
 Base.metadata.create_all(engine)
