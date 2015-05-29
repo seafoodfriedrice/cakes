@@ -1,3 +1,7 @@
+{% macro render_dropdown(item) %}
+<li><a href="#">{{ item.name }}</a></li>
+{% endmacro %}
+
 {% macro render_product(product) %}
 <tr>
     <td>{{ product.brand.name }}</td>
