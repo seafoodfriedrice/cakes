@@ -59,3 +59,12 @@ def products_add():
 
         return redirect(url_for("products", brands=brands,
                                products=products, categories=categories))
+
+@app.route("/products/brands/<int:id>")
+def brand(id):
+    brands = session.query(Brand).order_by(Brand.name.asc()).all()
+    categories = session.query(Category).order_by(Category.name.asc()).all()
+
+    brand = session.query(Brand).get(id)
+    return render_template("brand.html", brands=brands, brand=brand,
+                           categories=categories)
