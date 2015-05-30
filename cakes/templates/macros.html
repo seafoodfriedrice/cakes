@@ -2,6 +2,14 @@
 <li><a href="#">{{ item.name }}</a></li>
 {% endmacro %}
 
+{% macro render_select(items, id_name) %}
+<select class="form-control" id="{{ id_name }}" name="{{ id_name }}">
+    {% for item in items %}
+    <option>{{ item.name }}</option>
+    {% endfor %}
+</select>
+{% endmacro %}
+
 {% macro render_product(product) %}
 <tr>
     <td>{{ product.brand.name }}</td>
