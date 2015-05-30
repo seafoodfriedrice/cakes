@@ -60,11 +60,22 @@ def product_add():
         return redirect(url_for("products", brands=brands,
                                products=products, categories=categories))
 
+@app.route("/product/edit/<int:id>", methods=["GET"])
+def product_edit(id):
+    brands = session.query(Brand).order_by(Brand.name.asc()).all()
+    categories = session.query(Category).order_by(Category.name.asc()).all()
+    product = session.query(Product).get(id)
+
+    return render_template("product_edit.html", brands=brands,
+                           product=product, categories=categories)
+
+
 @app.route("/products/brands/<int:id>")
 def brand(id):
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
     categories = session.query(Category).order_by(Category.name.asc()).all()
-
     brand = session.query(Brand).get(id)
-    return render_template("brand.html", brands=brands, brand=brand,
-                           categories=categories)
+
+    if request.method == "GET":
+        return render_template("brand.html", brands=brands, brand=brand,
+                               categories=categories)
