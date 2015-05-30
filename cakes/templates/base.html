@@ -33,6 +33,10 @@
                                 Brands <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
+                                <li><a href="#"><span class="glyphicon glyphicon-plus"></span>&nbsp; Add New Brand</a></li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">My Brands</li>
+                                <li class="divider"></li>
                                 {% for brand in brands %}{{ macros.render_dropdown(brand, "brand") }}{% endfor %}
                             </ul>
                         </li>
@@ -41,20 +45,11 @@
                                 Categories <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
+                                <li><a href="#"><span class="glyphicon glyphicon-plus"></span>&nbsp; Add New Category</a></li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">My Categories</li>
+                                <li class="divider"></li>
                                 {% for category in categories %}{{ macros.render_dropdown(category, "category") }}{% endfor %}
-                            </ul>
-                        </li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                Add <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url_for('product_add') }}">Product</a></li>
-                                <li><a href="#">Brand</a></li>
-                                <li><a href="#">Category</a></li>
-                                <li><a href="#">Sub-Category</a></li>
                             </ul>
                         </li>
                     </ul>
