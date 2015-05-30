@@ -33,7 +33,7 @@
                                 Brands <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                {% for brand in brands %}{{ macros.render_dropdown(brand) }}{% endfor %}
+                                {% for brand in brands %}{{ macros.render_dropdown(brand, "brand") }}{% endfor %}
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -41,7 +41,7 @@
                                 Categories <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                {% for category in categories %}{{ macros.render_dropdown(category) }}{% endfor %}
+                                {% for category in categories %}{{ macros.render_dropdown(category, "category") }}{% endfor %}
                             </ul>
                         </li>
                     </ul>
