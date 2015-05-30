@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
 <ol class="breadcrumb">
+    <li><a href="{{ url_for('category', id=product.category.id) }}">{{ product.category.name }}</a></li>
     <li><a href="{{ url_for('brand', id=product.brand.id) }}">{{ product.brand.name }}</a></li>
     <li>{{ product.name }}</li>
     <li class="active">Edit</li>
