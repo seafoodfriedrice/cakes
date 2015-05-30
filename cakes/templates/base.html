@@ -27,7 +27,7 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="{{ url_for('products') }}">Products</a></li>
+                        <li {% if request.path == '/products' %}class="active"{% endif %}><a href="{{ url_for('products') }}">Products</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 Brands <span class="caret"></span>
@@ -36,7 +36,6 @@
                                 <li><a href="#"><span class="glyphicon glyphicon-plus"></span>&nbsp; Add New Brand</a></li>
                                 <li class="divider"></li>
                                 <li class="dropdown-header">My Brands</li>
-                                <li class="divider"></li>
                                 {% for brand in brands %}{{ macros.render_dropdown(brand, "brand") }}{% endfor %}
                             </ul>
                         </li>
@@ -48,10 +47,12 @@
                                 <li><a href="#"><span class="glyphicon glyphicon-plus"></span>&nbsp; Add New Category</a></li>
                                 <li class="divider"></li>
                                 <li class="dropdown-header">My Categories</li>
-                                <li class="divider"></li>
                                 {% for category in categories %}{{ macros.render_dropdown(category, "category") }}{% endfor %}
                             </ul>
                         </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><div><a href="{{ url_for('product_add') }}" class="btn btn-info navbar-btn">Add Product</a></div></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div><!--/.container-fluid -->
