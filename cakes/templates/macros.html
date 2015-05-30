@@ -1,5 +1,9 @@
 {% macro render_dropdown(item) %}
-<li><a href="#">{{ item.name }}</a></li>
+<li>
+    <a href="{{ url_for("brand", id=item.id) }}">
+        <span class="label label-info">{{ item.products | count }}</span>&nbsp; {{ item.name }}
+    </a>
+</li>
 {% endmacro %}
 
 {% macro render_select(items, id_name) %}
@@ -15,8 +19,18 @@
     <td>{{ product.brand.name }}</td>
     <td>{{ product.category.name }}</td>
     <td>{{ product.sub_category.name }}</td>
-    <td>{{ product.name }}</td>
+    <td><a href="{{ url_for('product_add') }}">{{ product.name }}</a></td>
     <td>{{ product.color }}</td>
-    <td>{{ product.price }}</td>
+    <td>${{ '%0.2f' | format(product.price|float) }}</td>
+</tr>
+{% endmacro %}
+
+{% macro render_product_by_brand(product) %}
+<tr>
+    <td>{{ product.category.name }}</td>
+    <td>{{ product.sub_category.name }}</td>
+    <td><a href="{{ url_for('product_add') }}">{{ product.name }}</a></td>
+    <td>{{ product.color }}</td>
+    <td>${{ '%0.2f' | format(product.price|float) }}</td>
 </tr>
 {% endmacro %}

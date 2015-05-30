@@ -19,13 +19,13 @@ def products():
     return render_template("products.html", brands=brands, products=products,
                            categories=categories)
 
-@app.route("/products/add", methods=["GET", "POST"])
-def products_add():
+@app.route("/product/add", methods=["GET", "POST"])
+def product_add():
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
     categories = session.query(Category).order_by(Category.name.asc()).all()
 
     if request.method == "GET":
-        return render_template("products_add.html", brands=brands,
+        return render_template("product_add.html", brands=brands,
                                categories=categories)
 
     if request.method == "POST":
