@@ -79,3 +79,13 @@ def brand(id):
     if request.method == "GET":
         return render_template("brand.html", brands=brands, brand=brand,
                                categories=categories)
+
+@app.route("/products/categories/<int:id>")
+def category(id):
+    brands = session.query(Brand).order_by(Brand.name.asc()).all()
+    categories = session.query(Category).order_by(Category.name.asc()).all()
+    category = session.query(Category).get(id)
+
+    if request.method == "GET":
+        return render_template("category.html", brands=brands, category=category,
+                               categories=categories)
