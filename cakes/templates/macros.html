@@ -21,8 +21,8 @@
 {% macro render_product(product) %}
 <tr>
     <td>{{ product.category.name }}</td>
-    <td>{{ product.brand.name }}</td>
     <td>{{ product.sub_category.name }}</td>
+    <td>{{ product.brand.name }}</td>
     <td><a href="{{ url_for('product_edit', id=product.id) }}">{{ product.name }}</a></td>
     <td>{{ product.color }}</td>
     <td>${{ '%0.2f' | format(product.price|float) }}</td>
