@@ -6,20 +6,24 @@
 </li>
 {% endmacro %}
 
-{% macro render_select(items, id_name) %}
+{% macro render_select(items, id_name, selected) %}
 <select class="form-control" id="{{ id_name }}" name="{{ id_name }}">
     {% for item in items %}
+    {% if item.name == selected %}
+    <option selected>{{ item.name }}</option>
+    {% else %}
     <option>{{ item.name }}</option>
+    {% endif %}
     {% endfor %}
 </select>
 {% endmacro %}
 
 {% macro render_product(product) %}
 <tr>
-    <td>{{ product.brand.name }}</td>
     <td>{{ product.category.name }}</td>
+    <td>{{ product.brand.name }}</td>
     <td>{{ product.sub_category.name }}</td>
-    <td><a href="{{ url_for('product_add') }}">{{ product.name }}</a></td>
+    <td><a href="{{ url_for('product_edit', id=product.id) }}">{{ product.name }}</a></td>
     <td>{{ product.color }}</td>
     <td>${{ '%0.2f' | format(product.price|float) }}</td>
 </tr>
@@ -29,7 +33,7 @@
 <tr>
     <td>{{ product.category.name }}</td>
     <td>{{ product.sub_category.name }}</td>
-    <td><a href="{{ url_for('product_add') }}">{{ product.name }}</a></td>
+    <td><a href="{{ url_for('product_edit', id=product.id) }}">{{ product.name }}</a></td>
     <td>{{ product.color }}</td>
     <td>${{ '%0.2f' | format(product.price|float) }}</td>
 </tr>
