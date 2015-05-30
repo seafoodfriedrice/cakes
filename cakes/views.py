@@ -15,4 +15,9 @@ categories = session.query(Category).order_by(Category.name.asc()).all()
 def products():
     products = session.query(Product).all()
     return render_template("products.html", brands=brands, products=products,
-                                        categories=categories)
+                           categories=categories)
+
+@app.route("/products/add")
+def products_add():
+    return render_template("products_add.html", brands=brands,
+                           categories=categories)
