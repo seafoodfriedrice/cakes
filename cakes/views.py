@@ -111,6 +111,30 @@ def brand(id):
         return render_template("brand.html", brands=brands, brand=brand,
                                categories=categories)
 
+@app.route("/brand/add", methods=["GET", "POST"])
+def brand_add():
+    brands = session.query(Brand).order_by(Brand.name.asc()).all()
+    categories = session.query(Category).order_by(Category.name.asc()).all()
+
+    if request.method == "POST":
+        brand = Brand(name=request.form["brand-name"].strip())
+        session.add(brand)
+
+        try:
+            session.commit()
+            message = "{}More!{} Added {}{}{} to your Brands.".format(
+                "<strong>", "</strong>", "<em>", brand.name, "</em>")
+            flash(message, "success")
+        except:
+            session.rollback()
+            message = "{}Oh no!{} Could not add {}{}{} to your Brands.".format(
+                "<strong>", "</strong>", "<em>", brand.name, "</em>")
+            flash(message, "danger")
+
+        return redirect(url_for("products"))
+
+    return render_template("brand_add.html", brands=brands, categories=categories)
+
 @app.route("/products/categories/<int:id>")
 def category(id):
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
