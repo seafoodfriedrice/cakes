@@ -24,7 +24,7 @@ class Product(Base):
     category_id = Column(Integer, ForeignKey('categories.id'))
     sub_category_id = Column(Integer, ForeignKey('sub_categories.id'))
     brand_id = Column(Integer, ForeignKey('brands.id'))
-    notes = relationship('Notes', backref='Product')
+    notes = relationship('Notes', backref='Product', uselist=False)
 
 
 class Category(Base):
