@@ -45,7 +45,7 @@
                                 Categories <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#"><span class="glyphicon glyphicon-plus"></span>&nbsp; Add New Category</a></li>
+                                <li><a href="{{ url_for('category_add') }}"><span class="glyphicon glyphicon-plus"></span>&nbsp; Add New Category</a></li>
                                 <li class="divider"></li>
                                 <li class="dropdown-header">My Categories</li>
                                 {% for category in categories %}{{ macros.render_dropdown(category, "category") }}{% endfor %}

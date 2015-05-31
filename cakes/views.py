@@ -143,3 +143,27 @@ def category(id):
     if request.method == "GET":
         return render_template("category.html", brands=brands, category=category,
                                categories=categories)
+
+@app.route("/category/add", methods=["GET", "POST"])
+def category_add():
+    brands = session.query(Brand).order_by(Brand.name.asc()).all()
+    categories = session.query(Category).order_by(Category.name.asc()).all()
+
+    if request.method == "POST":
+        category = Category(name=request.form["category-name"].strip())
+        session.add(category)
+
+        try:
+            session.commit()
+            message = "{}More!{} Added {}{}{} to your Categories.".format(
+                "<strong>", "</strong>", "<em>", category.name, "</em>")
+            flash(message, "success")
+        except:
+            session.rollback()
+            message = "{}Oh no!{} Problem adding {}{}{} to Categories.".format(
+                "<strong>", "</strong>", "<em>", category.name, "</em>")
+            flash(message, "danger")
+
+        return redirect(url_for("products"))
+
+    return render_template("category_add.html", brands=brands, categories=categories)

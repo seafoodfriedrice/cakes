@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block body %}
+<h2>Add Category</h2>
+<hr />
+<div class="container-fluid">
+
+    <form role="form" method="POST" class="form-horizontal">
+
+        <div class="form-group">
+            <label for="current-categories" class="col-sm-3 control-label">Current Categories</label>
+            <div class="col-sm-4">
+                {{ macros.render_select(categories, "current-category") }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="new-category" class="col-sm-3 control-label">New Category</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="category-name" name="category-name" placeholder="Skincare" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-4">
+                <a href="{{ url_for('products') }}" type="button" class="btn btn-default">Cancel</a>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+
+    </form>
+
+</div> <!-- /container-fluid -->
+<hr />
+{% endblock %}
