@@ -24,10 +24,6 @@ def product_add():
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
     categories = session.query(Category).order_by(Category.name.asc()).all()
 
-    if request.method == "GET":
-        return render_template("product_add.html", brands=brands,
-                               categories=categories)
-
     if request.method == "POST":
         brand = session.query(Brand).filter_by(
             name=request.form["brand"]).first()
@@ -61,6 +57,9 @@ def product_add():
 
         return redirect(url_for("products", brands=brands,
                                products=products, categories=categories))
+
+    return render_template("product_add.html", brands=brands,
+                           categories=categories)
 
 @app.route("/product/edit/<int:id>", methods=["GET", "POST"])
 def product_edit(id):
