@@ -60,14 +60,43 @@ def product_add():
         return redirect(url_for("products", brands=brands,
                                products=products, categories=categories))
 
-@app.route("/product/edit/<int:id>", methods=["GET"])
+@app.route("/product/edit/<int:id>", methods=["GET", "POST"])
 def product_edit(id):
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
     categories = session.query(Category).order_by(Category.name.asc()).all()
     product = session.query(Product).get(id)
 
-    return render_template("product_edit.html", brands=brands,
-                           product=product, categories=categories)
+    if request.method == "POST":
+        product.name = request.form["product-name"].strip()
+        product.color = request.form["color"].strip().title()
+        product.price = float(request.form["price"].strip())
+        product.notes.text=request.form["notes"]
+
+        category = session.query(Category).filter_by(
+            name=request.form["category"]).first()
+        category.products.append(product)
+
+        brand = session.query(Brand).filter_by(
+            name=request.form["brand"]).first()
+        brand.products.append(product)
+
+        session.add_all([category, brand, product])
+
+        try:
+            session.commit()
+            message = "{}Yay!{} {}{}{} has been updated.".format(
+                "<strong>", "</strong>", "<em>", product.name, "</em>")
+            flash(message, "success")
+        except:
+            session.rollback()
+            message = "{}Uh-oh!{} Problem editing {}{}{}.".format(
+                "<strong>", "</strong>", "<em>", product.name, "</em>")
+            flash(error, "danger")
+
+        return redirect(url_for("product_edit", id=product.id))
+    else:
+        return render_template("product_edit.html", brands=brands,
+                               product=product, categories=categories)
 
 
 @app.route("/products/brands/<int:id>")
