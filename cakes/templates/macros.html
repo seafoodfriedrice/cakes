@@ -1,7 +1,7 @@
 {% macro render_dropdown(item, view) %}
 <li>
     <a href="{{ url_for(view, id=item.id) }}">
-        {% if item.products %}<span class="label label-info">{{ item.products | count }}{% else %}<span class="label label-default">&nbsp; {% endif %}</span>&nbsp; {{ item.name }}
+        {% if item.products %}<span class="label label-info">{{ item.products | count }}{% else %}<span class="glyphicon glyphicon-unchecked">{% endif %}</span>&nbsp; {{ item.name }}
     </a>
 </li>
 {% endmacro %}
