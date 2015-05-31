@@ -2,7 +2,7 @@ import os
 from flask.ext.script import Manager
 from cakes import app
 from cakes.database import Base, session
-from cakes.models import Brand, Category, SubCategory, Product
+from cakes.models import Brand, Category, SubCategory, Product, Notes
 
 
 manager = Manager(app)
@@ -37,6 +37,8 @@ def seed():
     eyeshadow = session.query(SubCategory).filter_by(name="Eyeshadow").first()
     product = Product(name='Ombre Blackstar "Color-Fix" Cream Eyeshadow',
                       price=43.50, color='Black Pearl')
+    notes = "Cakes needs some product notes!"
+    product.notes = Notes(text=notes)
     eyes.products.append(product)
     eyeshadow.products.append(product)
     byterry.products.append(product)
