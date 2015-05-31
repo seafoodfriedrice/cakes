@@ -41,6 +41,8 @@ def product_add():
         # Remove dollar sign from price
         product.price = re.sub('\$', '', request.form["price"].strip())
 
+        product.notes = Notes(text=request.form["notes"])
+
         brand.products.append(product)
         category.products.append(product)
 
