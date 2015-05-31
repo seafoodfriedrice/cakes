@@ -34,7 +34,7 @@
                                 Brands <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#"><span class="glyphicon glyphicon-plus"></span>&nbsp; Add New Brand</a></li>
+                                <li><a href="{{ url_for('brand_add') }}"><span class="glyphicon glyphicon-plus"></span>&nbsp; Add New Brand</a></li>
                                 <li class="divider"></li>
                                 <li class="dropdown-header">My Brands</li>
                                 {% for brand in brands %}{{ macros.render_dropdown(brand, "brand") }}{% endfor %}
