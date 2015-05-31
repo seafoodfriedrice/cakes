@@ -96,9 +96,9 @@ def product_edit(id):
             flash(error, "danger")
 
         return redirect(url_for("product_edit", id=product.id))
-    else:
-        return render_template("product_edit.html", brands=brands,
-                               product=product, categories=categories)
+
+    return render_template("product_edit.html", brands=brands,
+                           product=product, categories=categories)
 
 
 @app.route("/products/brands/<int:id>")
