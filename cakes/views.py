@@ -77,35 +77,52 @@ def product_edit(id):
     product = session.query(Product).get(id)
 
     if request.method == "POST":
-        product.name = request.form["product-name"].strip()
-        if request.form["color"]:
-            product.color = request.form["color"].strip().title()
-        if isinstance(request.form["price"], float):
-            product.price = float(request.form["price"].strip())
-        product.notes.text=request.form["notes"]
 
-        category = session.query(Category).filter_by(
-            name=request.form["category"]).first()
-        category.products.append(product)
+        if request.form["submit"] == "Delete":
+            session.delete(product)
+            try:
+                session.commit()
+                message = "{}Bye-bye!{} {}{}{} removed from inventory.".format(
+                    "<strong>", "</strong>", "<em>", product.name, "</em>")
+                flash(message, "success")
+            except:
+                session.rollback()
+                message = "{}Oh noes!{} Couldn't delete {}{}{}.".format(
+                    "<strong>", "</strong>", "<em>", product.name, "</em>")
+                flash(error, "danger")
 
-        brand = session.query(Brand).filter_by(
-            name=request.form["brand"]).first()
-        brand.products.append(product)
+            return redirect(url_for("products"))
+            
+        if request.form["submit"] == "Save":
+            product.name = request.form["product-name"].strip()
+            if request.form["color"]:
+                product.color = request.form["color"].strip().title()
+            if isinstance(request.form["price"], float):
+                product.price = float(request.form["price"].strip())
+            product.notes.text=request.form["notes"]
 
-        session.add_all([category, brand, product])
+            category = session.query(Category).filter_by(
+                name=request.form["category"]).first()
+            category.products.append(product)
 
-        try:
-            session.commit()
-            message = "{}Yay!{} {}{}{} has been updated.".format(
-                "<strong>", "</strong>", "<em>", product.name, "</em>")
-            flash(message, "success")
-        except:
-            session.rollback()
-            message = "{}Uh-oh!{} Problem editing {}{}{}.".format(
-                "<strong>", "</strong>", "<em>", product.name, "</em>")
-            flash(error, "danger")
+            brand = session.query(Brand).filter_by(
+                name=request.form["brand"]).first()
+            brand.products.append(product)
 
-        return redirect(url_for("products"))
+            session.add_all([category, brand, product])
+
+            try:
+                session.commit()
+                message = "{}Yay!{} {}{}{} has been updated.".format(
+                    "<strong>", "</strong>", "<em>", product.name, "</em>")
+                flash(message, "success")
+            except:
+                session.rollback()
+                message = "{}Uh-oh!{} Problem editing {}{}{}.".format(
+                    "<strong>", "</strong>", "<em>", product.name, "</em>")
+                flash(error, "danger")
+
+            return redirect(url_for("products"))
 
     return render_template("product_edit.html", brands=brands,
                            product=product, categories=categories)
