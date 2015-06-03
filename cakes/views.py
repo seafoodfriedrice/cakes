@@ -191,15 +191,30 @@ def brand_add():
 
 
 
-@app.route("/products/categories/<int:id>")
+@app.route("/products/categories/<int:id>", methods=["GET", "POST"])
 def category(id):
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
     categories = session.query(Category).order_by(Category.name.asc()).all()
     category = session.query(Category).get(id)
 
-    if request.method == "GET":
-        return render_template("category.html", brands=brands, category=category,
-                               categories=categories)
+    if request.method == "POST":
+        category.name = request.form["category-name"].strip()
+        session.add(category)
+        try:
+            session.commit()
+            message = "{}Makeover!{} Category name changed to {}{}{}.".format(
+                "<strong>", "</strong>", "<em>", category.name, "</em>")
+            flash(message, "success")
+        except:
+            session.rollback()
+            message = "{}Whoops!{} Couldn't change name for {}{}{}.".format(
+                "<strong>", "</strong>", "<em>", category.name, "</em>")
+            flash(message, "danger")
+        return redirect(url_for("category", id=category.id,
+                                products=products, categories=categories))
+
+    return render_template("category.html", brands=brands, category=category,
+                           categories=categories)
 
 
 @app.route("/category/add", methods=["GET", "POST"])
