@@ -9,6 +9,7 @@ from cakes.database import session
 from cakes.models import Brand, Category, SubCategory, Product, Notes
 
 
+
 @app.route("/")
 @app.route("/products")
 def products():
@@ -18,6 +19,7 @@ def products():
     products = session.query(Product).order_by(Product.id.desc()).all()
     return render_template("products.html", brands=brands, products=products,
                            categories=categories)
+
 
 @app.route("/product/add", methods=["GET", "POST"])
 def product_add():
@@ -77,6 +79,7 @@ def product_add():
     return render_template("product_add.html", brands=brands,
                            categories=categories)
 
+
 @app.route("/product/edit/<int:id>", methods=["GET", "POST"])
 def product_edit(id):
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
@@ -135,6 +138,7 @@ def product_edit(id):
                            product=product, categories=categories)
 
 
+
 @app.route("/products/brands/<int:id>", methods=["GET", "POST"])
 def brand(id):
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
@@ -160,6 +164,7 @@ def brand(id):
     return render_template("brand.html", brands=brands, brand=brand,
                            categories=categories)
 
+
 @app.route("/brand/add", methods=["GET", "POST"])
 def brand_add():
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
@@ -184,6 +189,8 @@ def brand_add():
 
     return render_template("brand_add.html", brands=brands, categories=categories)
 
+
+
 @app.route("/products/categories/<int:id>")
 def category(id):
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
@@ -193,6 +200,7 @@ def category(id):
     if request.method == "GET":
         return render_template("category.html", brands=brands, category=category,
                                categories=categories)
+
 
 @app.route("/category/add", methods=["GET", "POST"])
 def category_add():
