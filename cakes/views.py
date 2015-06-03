@@ -59,12 +59,20 @@ def product_add():
                 "<strong>", "</strong>", "<em>", product_name, "</em>")
             flash(message, "danger")
 
-        if request.form["submit"] == "Submit":
+        if request.form["submit"] == "Add":
             return redirect(url_for("products", brands=brands,
                                     products=products, categories=categories))
+        # Redirect back to product_add() when Add Another button is pressed
         else:
-            return redirect(url_for("product_add", brands=brands,
-                                    categories=categories))
+            args = {
+                "category": category,
+                "brand": brand,
+                "product": product,
+                "brands": brands,
+                "categories": categories,
+
+            }
+            return render_template("product_add.html", **args)
 
     return render_template("product_add.html", brands=brands,
                            categories=categories)
