@@ -26,7 +26,11 @@
     <td>{{ product.brand.name }}</td>
     <td><a href="{{ url_for('product_edit', id=product.id) }}">{{ product.name }}</a></td>
     <td>{{ product.color }}</td>
+    {% if not product.price or product.price == 0 -%}
+    <td></td>
+    {% else %}
     <td>${{ '%0.2f' | format(product.price|float) }}</td>
+    {%- endif %}
     <td>{{ product.notes.text }}</td>
 </tr>
 {% endmacro %}
@@ -37,7 +41,11 @@
     <td>{{ product.sub_category.name }}</td>
     <td><a href="{{ url_for('product_edit', id=product.id) }}">{{ product.name }}</a></td>
     <td>{{ product.color }}</td>
+    {% if not product.price or product.price == 0 -%}
+    <td></td>
+    {% else %}
     <td>${{ '%0.2f' | format(product.price|float) }}</td>
+    {%- endif %}
     <td>{{ product.notes.text }}</td>
 </tr>
 {% endmacro %}
@@ -47,7 +55,11 @@
     <td>{{ product.brand.name }}</td>
     <td><a href="{{ url_for('product_edit', id=product.id) }}">{{ product.name }}</a></td>
     <td>{{ product.color }}</td>
+    {% if not product.price or product.price == 0 -%}
+    <td></td>
+    {% else %}
     <td>${{ '%0.2f' | format(product.price|float) }}</td>
+    {%- endif %}
     <td>{{ product.notes.text }}</td>
 </tr>
 {% endmacro %}
