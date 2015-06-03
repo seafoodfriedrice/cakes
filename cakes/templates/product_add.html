@@ -14,38 +14,57 @@
         <div class="form-group">
             <label for="category" class="col-sm-4 control-label">Category</label>
             <div class="col-sm-8">
+                {# Pressing Add Another will pass the category object to the
+                   template which can be used by render_select() to select
+                   the category name as the default in the dropdown list #}
+                {% if category -%}
+                {{ macros.render_select(categories, "category", category.name) }}
+                {% else %}
                 {{ macros.render_select(categories, "category") }}
+                {%- endif %}
             </div>
         </div>
         <div class="form-group">
             <label for="brand" class="col-sm-4 control-label">Brand</label>
             <div class="col-sm-8">
+                {# Pressing Add Another will pass the brand object to the
+                   template which can be used by render_select() to select
+                   the brand name as the default in the dropdown list #}
+                {% if brand -%}
+                {{ macros.render_select(brands, "brand", brand.name) }}
+                {% else %}
                 {{ macros.render_select(brands, "brand") }}
+                {%- endif %}
             </div>
         </div>
         <div class="form-group">
             <label for="product-name" class="col-sm-4 control-label">Product Name</label>
             <div class="col-sm-8">
-                <input type="text" class="form-control" id="product-name" name="product-name" placeholder="Burnished Amber" required>
+                {#- Display the previous product name if Add Another was pressed #}
+                {% if product -%}
+                <input type="text" class="form-control" id="product-name" name="product-name" value="{{ product.name }}" required>
+                {% else %}
+                <input type="text" class="form-control" id="product-name" name="product-name" placeholder="Eye Color Quad" required>
+                {%- endif %}
             </div>
         </div>
         <div class="form-group">
             <label for="color" class="col-sm-4 control-label">Color</label>
             <div class="col-sm-8">
-                <input type="text" class="form-control" id="color" name="color" placeholder="Pink">
+                <input type="text" class="form-control" id="color" name="color" placeholder="Burnished Amber">
             </div>
         </div>
         <div class="form-group">
             <label for="price" class="col-sm-4 control-label">Price</label>
             <div class="col-sm-8">
-                <input type="text" class="form-control" id="price" name="price" placeholder="0.50">
+                <input type="text" class="form-control" id="price" name="price" placeholder="18.50">
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-offset-4 col-md-8">
                 <a href="{{ url_for('products') }}" type="button" class="btn btn-default">Cancel</a>
-                <button type="submit" name="submit" class="btn btn-primary" value="Submit">Save</button>
-                <button type="submit" name="submit" class="btn btn-primary" value="Continue">Continue</button>
+                <button type="submit" name="submit" class="btn btn-primary" value="Add">Add</button>
+                <button type="submit" name="submit" class="btn btn-primary" value="Another">Add Another</button>
             </div>
         </div>
     </div>
