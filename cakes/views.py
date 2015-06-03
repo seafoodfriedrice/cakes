@@ -32,12 +32,16 @@ def product_add():
 
         product_name = request.form["product-name"].strip().title()
         product = Product(name=product_name)
-        product.color = request.form["color"].strip()
+
 
         # Remove dollar sign from price
-        product.price = re.sub('\$', '', request.form["price"].strip())
+        # If empty defaults to 0
+        if request.form["price"]:
+            product.price = float(request.form["price"])
 
-        product.notes = Notes(text=request.form["notes"])
+        product.color = request.form.get("color", "").strip()
+        product.notes = Notes()
+        product.notes.text = request.form.get("notes")
 
         brand.products.append(product)
         category.products.append(product)
@@ -46,17 +50,22 @@ def product_add():
 
         try:
             session.commit()
-            message = "{}Mine!{} Added {}{}{} to your collection.".format(
-                "<strong>", "</strong>", "<em>", product_name, "</em>")
+            message = "{}Mine!{} Added {} {} {}{}{} to your collection.".format(
+                "<strong>", "</strong>", brand.name, product_name,
+                "<em>", product.color, "</em>")
             flash(message, "success")
         except:
             session.rollback()
             message = "{}Uh-oh!{} Could not add {}{}{}.".format(
                 "<strong>", "</strong>", "<em>", product_name, "</em>")
-            flash(error, "danger")
+            flash(message, "danger")
 
-        return redirect(url_for("products", brands=brands,
-                               products=products, categories=categories))
+        if request.form["submit"] == "Submit":
+            return redirect(url_for("products", brands=brands,
+                                    products=products, categories=categories))
+        else:
+            return redirect(url_for("product_add", brands=brands,
+                                    categories=categories))
 
     return render_template("product_add.html", brands=brands,
                            categories=categories)
@@ -69,8 +78,10 @@ def product_edit(id):
 
     if request.method == "POST":
         product.name = request.form["product-name"].strip()
-        product.color = request.form["color"].strip().title()
-        product.price = float(request.form["price"].strip())
+        if request.form["color"]:
+            product.color = request.form["color"].strip().title()
+        if isinstance(request.form["price"], float):
+            product.price = float(request.form["price"].strip())
         product.notes.text=request.form["notes"]
 
         category = session.query(Category).filter_by(
@@ -94,7 +105,7 @@ def product_edit(id):
                 "<strong>", "</strong>", "<em>", product.name, "</em>")
             flash(error, "danger")
 
-        return redirect(url_for("product_edit", id=product.id))
+        return redirect(url_for("products"))
 
     return render_template("product_edit.html", brands=brands,
                            product=product, categories=categories)
