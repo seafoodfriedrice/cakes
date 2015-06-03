@@ -2,7 +2,7 @@
 {% extends "base.html" %}
 
 {% block body %}
-<h1>Products <small>All</small></h1>
+<h1>Products <small>All</small><div class="pull-right">{{ products | count }}</div></h1>
 <script type="text/javascript">
 $(document).ready(function(){
     $('#selectAll').on('click',function(){
