@@ -26,6 +26,18 @@ class Product(Base):
     brand_id = Column(Integer, ForeignKey('brands.id'))
     notes = relationship('Notes', backref='Product', uselist=False)
 
+    def as_dictionary(self):
+        product = {
+            "id": self.id,
+            "category_name": self.category.name,
+            "brand_name": self.brand.name,
+            "product_name": self.name,
+            "product_color": self.color,
+            "notes": self.notes.text
+
+        }
+        return product
+
 
 class Category(Base):
     __tablename__ = "categories"
