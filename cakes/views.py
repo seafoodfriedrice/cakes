@@ -33,7 +33,6 @@ def product_add():
         product_name = request.form["product-name"].strip().title()
         product = Product(name=product_name)
 
-
         # Remove dollar sign from price
         # If empty defaults to 0
         if request.form["price"]:
@@ -128,15 +127,30 @@ def product_edit(id):
                            product=product, categories=categories)
 
 
-@app.route("/products/brands/<int:id>")
+@app.route("/products/brands/<int:id>", methods=["GET", "POST"])
 def brand(id):
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
     categories = session.query(Category).order_by(Category.name.asc()).all()
     brand = session.query(Brand).get(id)
 
-    if request.method == "GET":
-        return render_template("brand.html", brands=brands, brand=brand,
-                               categories=categories)
+    if request.method == "POST":
+        brand.name = request.form["brand-name"].strip()
+        session.add(brand)
+        try:
+            session.commit()
+            message = "{}Makeover!{} Brand name changed to {}{}{}.".format(
+                "<strong>", "</strong>", "<em>", brand.name, "</em>")
+            flash(message, "success")
+        except:
+            session.rollback()
+            message = "{}Whoops!{} Couldn't change name for {}{}{}.".format(
+                "<strong>", "</strong>", "<em>", brand.name, "</em>")
+            flash(message, "danger")
+        return redirect(url_for("brand", id=brand.id,
+                                products=products, categories=categories))
+
+    return render_template("brand.html", brands=brands, brand=brand,
+                           categories=categories)
 
 @app.route("/brand/add", methods=["GET", "POST"])
 def brand_add():
