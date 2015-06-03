@@ -10,7 +10,7 @@ class Brand(Base):
     __tablename__ = "brands"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(24), nullable=False, unique=True)
+    name = Column(String(48), nullable=False, unique=True)
     products = relationship('Product', backref='brand')
 
 
