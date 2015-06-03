@@ -3,15 +3,32 @@
 
 {% block body %}
 <h1>Products <small>All</small></h1>
-<table class="table table-hover table-condensed" data-link="row">
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#selectAll').on('click',function(){
+        if ($(this).is(':checked')) {
+            $('.check-box').each(function(){
+                this.checked = true;
+            });
+        }else{
+            $('.check-box').each(function(){
+                this.checked = false;
+            });
+        }
+    })
+});
+</script>
+<table class="table table-hover table-condensed">
     <thead>
         <tr>
+            <th><input type="checkbox" id="selectAll"></th>
             <th>Category</th>
             <th></th>
             <th>Brand</th>
             <th>Product Name</th>
             <th>Color</th>
             <th>Price</th>
+            <th>Notes</th>
         </tr>
     </thead>
     <tbody>
