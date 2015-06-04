@@ -57,7 +57,12 @@
         <div class="form-group">
             <label for="price" class="col-sm-4 control-label">Price</label>
             <div class="col-sm-8">
+                {# Display previous product color if Add Another was pressed #}
+                {% if product -%}
+                <input type="text" class="form-control" id="price" name="price" value="{{ product.price }}">
+                {% else %}
                 <input type="text" class="form-control" id="price" name="price" placeholder="18.50">
+                {% endif %}
             </div>
         </div>
         <div class="form-group">
