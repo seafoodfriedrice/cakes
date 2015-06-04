@@ -76,6 +76,10 @@ def product_add():
             }
             return render_template("product_add.html", **kwargs)
 
+    else:
+         return render_template("product_add.html", brands=brands,
+                                     categories=categories)
+
 
 @app.route("/product/edit/<int:id>", methods=["GET", "POST"])
 def product_edit(id):
