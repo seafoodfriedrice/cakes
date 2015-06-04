@@ -66,7 +66,7 @@ def product_add():
                                     products=products, categories=categories))
         # Redirect back to product_add() when Add Another button is pressed
         else:
-            args = {
+            kwargs = {
                 "category": category,
                 "brand": brand,
                 "product": product,
@@ -74,7 +74,7 @@ def product_add():
                 "categories": categories,
 
             }
-            return render_template("product_add.html", **args)
+            return render_template("product_add.html", **kwargs)
 
     return render_template("product_add.html", brands=brands,
                            categories=categories)
