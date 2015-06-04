@@ -107,7 +107,7 @@ def product_edit(id):
             product.name = request.form["product-name"].strip()
             if request.form["color"]:
                 product.color = request.form["color"].strip().title()
-            if isinstance(request.form["price"], float):
+            if request.form["price"]:
                 product.price = float(request.form["price"].strip())
             product.notes.text=request.form["notes"]
 
