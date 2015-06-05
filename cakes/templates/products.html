@@ -20,10 +20,11 @@ $(document).ready(function(){
                 this.checked = false;
             });
         }
-    })
+    });
+    $('#products-table').dataTable();
 });
 </script>
-<table class="table table-hover table-condensed table-striped">
+<table id="products-table" class="table table-hover table-condensed table-striped" >
     <thead>
         <tr>
             <th><input type="checkbox" id="selectAll"></th>
