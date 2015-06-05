@@ -33,6 +33,7 @@ class Product(Base):
             "brand_name": self.brand.name,
             "product_name": self.name,
             "product_color": self.color,
+            "price": self.price,
             "notes": self.notes.text
 
         }
