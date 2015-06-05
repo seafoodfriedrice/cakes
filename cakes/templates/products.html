@@ -37,9 +37,9 @@ $(document).ready(function(){
         </tr>
     </thead>
     <tbody>
-        {% for product in products %}
+        {% for product in products -%}
         {{ macros.render_product(product) }}
-        {% endfor %}
+        {%- endfor %}
     </tbody>
 </table>
 {% endblock %}
