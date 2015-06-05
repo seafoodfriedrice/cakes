@@ -3,6 +3,7 @@ from datetime import datetime
 
 from flask import render_template, request, redirect, url_for, flash
 from sqlalchemy import exc
+from sqlalchemy import func
 
 from cakes import app
 from cakes.database import session
@@ -17,8 +18,10 @@ def products():
     categories = session.query(Category).order_by(Category.name.asc()).all()
 
     products = session.query(Product).order_by(Product.id.desc()).all()
+    price_total = session.query(func.sum(Product.price).label(
+        'product_price_total')).scalar()
     return render_template("products.html", brands=brands, products=products,
-                           categories=categories)
+                           categories=categories, price_total=price_total)
 
 
 @app.route("/product/add", methods=["GET", "POST"])
@@ -35,10 +38,8 @@ def product_add():
         product_name = request.form["product-name"].strip().title()
         product = Product(name=product_name)
 
-        # Remove dollar sign from price
-        # If empty defaults to 0
-        if request.form["price"]:
-            product.price = float(request.form["price"])
+        if request.form["price"] != None:
+            product.price = request.form["price"]
 
         product.color = request.form.get("color", "").strip()
         product.notes = Notes()
