@@ -1,5 +1,8 @@
 import os
+
 from flask.ext.script import Manager
+from flask.ext.migrate import Migrate, MigrateCommand
+
 from cakes import app
 from cakes.database import Base, session
 from cakes.models import Brand, Category, SubCategory, Product, Notes
@@ -44,6 +47,13 @@ def seed():
     byterry.products.append(product)
     session.add(product)
     session.commit()
+
+class DB(object):
+    def __init__(self, metadata):
+        self.metadata = metadata
+
+migrate = Migrate(app, DB(Base.metadata))
+manager.add_command('db', MigrateCommand)
 
 if __name__ == "__main__":
     manager.run()
