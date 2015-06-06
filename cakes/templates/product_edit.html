@@ -33,6 +33,27 @@
 
 <hr />
 
+<script type="text/javascript">
+$(document).ready(function() {
+    $(".quantity-btn").on("click", function() {
+        var button = $(this);
+        var oldValue = button.closest('.quantity-group').find('input#quantity-input').val();
+
+        if (button.text() == "+") {
+            var newValue = parseFloat(oldValue) + 1;
+        } else {
+            if (oldValue > 0) {
+                var newValue = parseFloat(oldValue) - 1;
+            } else {
+                newValue = 0;
+            }
+        }
+
+        button.closest('.quantity-group').find('input#quantity-input').val(newValue);
+    });
+});
+</script>
+
 <div class="container-fluid">
 
     <form role="form" method="POST" class="form-horizontal">
@@ -65,13 +86,13 @@
         <div class="form-group">
             <label for="quantity" class="col-sm-4 control-label">Quantity</label>
             <div class="col-sm-4">
-                <div class="input-group">
+                <div class="input-group quantity-group">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">-</button>
+                        <button class="btn btn-default quantity-btn" type="button">-</button>
                     </span>
-                    <input type="text" class="form-control" id="quantity" name="quantity" value="{{ product.quantity }}">
+                    <input type="text" class="form-control" id="quantity-input" name="quantity" value="{{ product.quantity }}">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">+</button>
+                        <button class="btn btn-default quantity-btn" type="button">+</button>
                     </span>
                 </div>
             </div>
