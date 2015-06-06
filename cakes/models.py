@@ -20,6 +20,7 @@ class Product(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(48))
     color = Column(String(48))
+    quantity = Column(Integer, default=int(1))
     price = Column(Float)
     category_id = Column(Integer, ForeignKey('categories.id'))
     sub_category_id = Column(Integer, ForeignKey('sub_categories.id'))
