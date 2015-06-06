@@ -113,6 +113,8 @@ def product_edit(id):
                 product.price = float(request.form["price"].strip())
             product.notes.text=request.form["notes"]
 
+            product.quantity = request.form["quantity"]
+
             category = session.query(Category).filter_by(
                 name=request.form["category"]).first()
             category.products.append(product)
