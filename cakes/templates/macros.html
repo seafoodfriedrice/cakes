@@ -26,6 +26,7 @@
     <td><a href="{{ url_for('brand', id=product.brand.id) }}">{{ product.brand.name }}</a></td>
     <td><a href="{{ url_for('product_edit', id=product.id) }}">{{ product.name }}</a></td>
     <td>{{ product.color }}</td>
+    <td>{{ product.quantity }}</td>
     {% if not product.price or product.price == 0 -%}
     <td></td>
     {% else %}
