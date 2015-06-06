@@ -21,9 +21,9 @@
 {% macro render_product(product) %}
 <tr>
     <td><input type="checkbox" class="check-box"></td>
-    <td>{{ product.category.name }}</td>
+    <td><a href="{{ url_for('category', id=product.category.id) }}">{{ product.category.name }}</a></td>
     <td>{{ product.sub_category.name }}</td>
-    <td>{{ product.brand.name }}</td>
+    <td><a href="{{ url_for('brand', id=product.brand.id) }}">{{ product.brand.name }}</a></td>
     <td><a href="{{ url_for('product_edit', id=product.id) }}">{{ product.name }}</a></td>
     <td>{{ product.color }}</td>
     {% if not product.price or product.price == 0 -%}
