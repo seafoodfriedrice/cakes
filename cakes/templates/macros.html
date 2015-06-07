@@ -32,7 +32,7 @@
     {% else %}
     <td>${{ '%0.2f' | format(product.price|float) }}</td>
     {%- endif %}
-    <td>{{ product.notes.text }}</td>
+    <td>{{ product.notes.text | newline_to_linebreak | safe }}</td>
 </tr>
 {% endmacro %}
 
