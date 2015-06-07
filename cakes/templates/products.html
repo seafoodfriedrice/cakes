@@ -2,15 +2,21 @@
 {% extends "base.html" %}
 
 {% block body %}
-<h1>Products <small>All</small>
-    <div class="pull-right">
-        <small>{% if price_total %}${{ price_total }}{% endif %}</small>
-        {{ products | count }}
+<div class="row">
+    <div class="col-md-6">
+        <h1>
+            Products <small>All</small>
+        </h1>
     </div>
-</h1>
-<div class="clearfix">
-    <hr />
+    <div class="col-md-6">
+        <h1 class="text text-right">
+            <small>{% if price_total %}${{ price_total }}{% endif %}</small> {{ products | count }}
+        </h1>
+    </div>
 </div>
+
+<hr />
+
 <script type="text/javascript">
 $(document).ready(function(){
     $('#selectAll').on('click',function(){
@@ -29,6 +35,7 @@ $(document).ready(function(){
     });
 });
 </script>
+
 <table id="products-table" class="table table-hover table-condensed table-striped dt-responsive">
     <thead>
         <tr>
