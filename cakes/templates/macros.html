@@ -20,7 +20,7 @@
 
 {% macro render_product(product) %}
 <tr>
-    <td><input type="checkbox" class="check-box"></td>
+    <td></td>
     <td><a href="{{ url_for('category', id=product.category.id) }}">{{ product.category.name }}</a></td>
     <td>{{ product.sub_category.name }}</td>
     <td><a href="{{ url_for('brand', id=product.brand.id) }}">{{ product.brand.name }}</a></td>

@@ -19,17 +19,6 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-    $('#selectAll').on('click',function(){
-        if ($(this).is(':checked')) {
-            $('.check-box').each(function(){
-                this.checked = true;
-            });
-        }else{
-            $('.check-box').each(function(){
-                this.checked = false;
-            });
-        }
-    });
     $('#products-table').dataTable({
         "lengthMenu": [[-1, 10, 25, 50, 100], ["All", 10, 25, 50, 100]]
     });
@@ -39,7 +28,7 @@ $(document).ready(function(){
 <table id="products-table" class="table table-hover table-condensed table-striped dt-responsive">
     <thead>
         <tr>
-            <th><input type="checkbox" id="selectAll"></th>
+            <th></th>
             <th>Category</th>
             <th></th>
             <th>Brand</th>
