@@ -41,6 +41,8 @@ def product_add():
         if request.form["price"] != None:
             product.price = request.form["price"]
 
+        product.quantity = request.form["quantity"]
+
         product.color = request.form.get("color", "").strip()
         product.notes = Notes()
         product.notes.text = request.form.get("notes")
