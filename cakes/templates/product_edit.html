@@ -104,6 +104,16 @@ $(document).ready(function() {
             </div>
         </div>
         <div class="form-group">
+            <label for="is-favorite" class="col-sm-4 control-label">Favorite</label>      
+            <div class="col-sm-8">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="is-favorite" name="is-favorite"{% if product.favorite %} checked="checked"{% endif %}> <span class="glyphicon glyphicon-star"></span>
+                    </label>
+                </div>
+            </div>
+        </div>      
+        <div class="form-group">
             <div class="col-md-offset-4 col-md-8">
                 <a href="{{ url_for('products') }}" type="button" class="btn btn-default">Cancel</a>
                 <button type="submit" name="submit" class="btn btn-primary" value="Save">Save</button>

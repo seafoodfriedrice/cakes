@@ -43,6 +43,7 @@ def product_add():
 
         product.quantity = request.form["quantity"]
 
+        product.favorite = request.form.get("is-favorite", False)
         product.color = request.form.get("color", "").strip()
         product.notes = Notes()
         product.notes.text = request.form.get("notes")
@@ -115,6 +116,7 @@ def product_edit(id):
                 product.price = float(request.form["price"].strip())
             product.notes.text=request.form["notes"]
 
+            product.favorite = request.form.get("is-favorite", False)
             product.quantity = request.form["quantity"]
 
             category = session.query(Category).filter_by(

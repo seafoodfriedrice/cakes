@@ -20,7 +20,11 @@
 
 {% macro render_product(product) %}
 <tr>
-    <td></td>
+    <td>
+    {%- if product.favorite %}
+        <span class="glyphicon glyphicon-star"></span>
+    {% endif -%}
+    </td>
     <td><a href="{{ url_for('category', id=product.category.id) }}">{{ product.category.name }}</a></td>
     <td>{{ product.sub_category.name }}</td>
     <td><a href="{{ url_for('brand', id=product.brand.id) }}">{{ product.brand.name }}</a></td>
