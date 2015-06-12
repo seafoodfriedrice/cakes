@@ -1,7 +1,7 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Float, Integer, String, ForeignKey
+from sqlalchemy import Column, Float, Integer, String, ForeignKey, Boolean
 
 from cakes.database import Base, engine
 
@@ -26,6 +26,7 @@ class Product(Base):
     sub_category_id = Column(Integer, ForeignKey('sub_categories.id'))
     brand_id = Column(Integer, ForeignKey('brands.id'))
     notes = relationship('Notes', backref='Product', uselist=False)
+    favorite = Column(Boolean, default=True)
 
     def as_dictionary(self):
         product = {
