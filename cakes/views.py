@@ -8,6 +8,7 @@ from sqlalchemy import func
 from cakes import app
 from cakes.database import session
 from cakes.models import Brand, Category, SubCategory, Product, Notes
+from cakes.forms import ProductForm
 
 
 
@@ -23,6 +24,39 @@ def products():
     return render_template("products.html", brands=brands, products=products,
                            categories=categories, price_total=price_total)
 
+def flash_form_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(u"Error in the %s field - %s" % (
+                getattr(form, field).label.text,
+                error), "danger")
+
+@app.route("/product/test_add", methods=["GET", "POST"])
+def test_add():
+    form = ProductForm()
+    form.brand.choices = Brand.form_choices()
+    form.category.choices = Category.form_choices()
+
+    if form.validate_on_submit():
+        brand = session.query(Brand).get(form.brand.data)
+        category = session.query(Category).get(form.category.data)
+        product = Product(name=form.name.data)
+        product.brand = brand
+        product.category = category
+        product.color = form.color.data
+        product.price = form.price.data
+        product.quantity = form.quantity.data
+        product.favorite = form.favorite.data
+        product.notes = Notes(text=form.notes.data)
+
+        session.add(product)
+        session.commit()
+
+        return redirect(url_for("products"))
+    else:
+        flash_form_errors(form)
+
+    return render_template("test_add.html", form=form)
 
 @app.route("/product/add", methods=["GET", "POST"])
 def product_add():
