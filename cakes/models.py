@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Float, Integer, String, ForeignKey, Boolean
 
-from cakes.database import Base, engine
+from cakes.database import Base, engine, session
 
 
 class Brand(Base):
@@ -12,6 +12,11 @@ class Brand(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(48), nullable=False, unique=True)
     products = relationship('Product', backref='brand')
+
+    @classmethod
+    def form_choices(cls):
+        return [(cls.id, cls.name)
+                for cls in session.query(cls).order_by(cls.name).all()]
 
 
 class Product(Base):
@@ -49,6 +54,11 @@ class Category(Base):
     name = Column(String(24), unique=True)
     sub_categories = relationship('SubCategory', backref='category')
     products = relationship('Product', backref='category')
+
+    @classmethod
+    def form_choices(cls):
+        return [(cls.id, cls.name)
+                for cls in session.query(cls).order_by(cls.name).all()]
 
 
 class SubCategory(Base):
