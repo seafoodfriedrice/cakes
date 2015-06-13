@@ -36,7 +36,7 @@
     {% else %}
     <td>${{ '%0.2f' | format(product.price|float) }}</td>
     {%- endif %}
-    <td>{{ product.notes.text | newline_to_linebreak | safe }}</td>
+    <td>{% if product.notes %}{{ product.notes.text | newline_to_linebreak | safe }}{% endif %}</td>
 </tr>
 {% endmacro %}
 
@@ -51,7 +51,7 @@
     {% else %}
     <td>${{ '%0.2f' | format(product.price|float) }}</td>
     {%- endif %}
-    <td>{{ product.notes.text }}</td>
+    <td>{% if product.notes %}{{ product.notes.text }}{% endif %}</td>
 </tr>
 {% endmacro %}
 
