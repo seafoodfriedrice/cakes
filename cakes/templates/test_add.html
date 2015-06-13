@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block body %}
+<ol class="breadcrumb">
+    <li><a href="{{ url_for('products') }}">Products</a></li>
+    <li class="active">Add</li>
+</ol>
+<h2>Add Product</h2>
+
+<hr />
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $(".quantity-btn").on("click", function() {
+        var button = $(this);
+        var oldValue = button.closest('.quantity-group').find('input#quantity-input').val();
+
+        if (button.text() == "+") {
+            var newValue = parseFloat(oldValue) + 1;
+        } else {
+            if (oldValue > 0) {
+                var newValue = parseFloat(oldValue) - 1;
+            } else {
+                newValue = 0;
+            }
+        }
+
+        button.closest('.quantity-group').find('input#quantity-input').val(newValue);
+    });
+});
+</script>
+
+<div class="container-fluid">
+
+    <form role="form" method="POST" class="form-horizontal">
+        {{ form.csrf_token }}
+
+        <div class="col-md-6">
+
+            <div class="form-group">
+                {{ form.category.label(class="col-sm-4 control-label") }}
+                <div class="col-sm-8">{{ form.category(class="form-control") }}</div>
+            </div>
+
+            <div class="form-group">
+                {{ form.brand.label(class="col-sm-4 control-label") }}
+                <div class="col-sm-8">{{ form.brand(class="form-control") }}</div>
+            </div>
+
+            <div class="form-group">
+                {{ form.name.label(class="col-sm-4 control-label") }}
+                <div class="col-sm-8">{{ form.name(class="form-control", placeholder="Eye Color Quad") }}</div>
+            </div>
+
+            <div class="form-group">
+                {{ form.color.label(class="col-sm-4 control-label") }}
+                <div class="col-sm-8">{{ form.color(class="form-control", placeholder="Burnished Amber") }}</div>
+            </div>
+
+            <div class="form-group">
+                {{ form.quantity.label(class="col-sm-4 control-label") }}
+                <div class="col-sm-8">{{ form.quantity(class="form-control", value=1) }}</div>
+            </div>
+
+            <div class="form-group">
+                {{ form.price.label(class="col-sm-4 control-label") }}
+                <div class="col-sm-8">{{ form.price(class="form-control", value=0.0) }}</div>
+            </div>
+
+            <div class="form-group">
+                {{ form.favorite.label(class="col-sm-4 control-label") }}
+                <div class="col-sm-8">{{ form.favorite(class="checkbox") }}</div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-4 col-md-8">
+                    <a href="{{ url_for('products') }}" type="button" class="btn btn-default">Cancel</a>
+                    <button type="submit" name="submit" class="btn btn-primary" value="Add">Add</button>
+                    <button type="submit" name="submit" class="btn btn-primary" value="Another">Add Another</button>
+                </div>
+            </div>
+
+        </div> <!-- ./col-md-6 -->
+        <div class="col-md-6">
+
+            <div class="col-sm-12">
+                {{ form.notes.label }}
+                {{ form.notes(class="form-control", rows=8)}}
+            </div>
+
+        </div>
+
+    </form>
+
+</div> <!-- /container-fluid -->
+<hr />
+{% endblock %}
