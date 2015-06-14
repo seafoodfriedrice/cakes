@@ -78,7 +78,13 @@ $(document).ready(function() {
 
             <div class="form-group">
                 {{ form.favorite.label(class="col-sm-4 control-label") }}
-                <div class="col-sm-8">{{ form.favorite(class="checkbox") }}</div>
+                <div class="col-sm-8">
+                    <div class="checkbox">
+                        <label>
+                            {{ form.favorite() }} <span class="glyphicon glyphicon-star"></span>
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
