@@ -126,7 +126,7 @@ $(document).ready(function() {
         <div class="form-group">
             <div class="col-sm-12">
                 <label for="price" class="control-label">Product Notes</label>
-                <textarea class="form-control" id="notes" name="notes" rows="8">{{ product.notes.text }}</textarea> 
+                <textarea class="form-control" id="notes" name="notes" rows="8"{% if not product.notes.text %} placeholder="Enter product notes here"{% endif %}>{{ product.notes.text }}</textarea> 
             </div>
         </div>
     </div>
