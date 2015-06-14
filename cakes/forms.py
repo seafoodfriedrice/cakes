@@ -8,10 +8,10 @@ from cakes.database import session
 from cakes.models import Category, Brand
 
 def category_names():
-    return session.query(Category)
+    return session.query(Category).order_by(Category.name)
 
 def brand_names():
-    return session.query(Brand)
+    return session.query(Brand).order_by(Brand.name)
 
 class ProductForm(Form):
     category = QuerySelectField(get_label='name', query_factory=category_names)
