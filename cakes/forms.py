@@ -1,7 +1,7 @@
 from flask.ext.wtf import Form
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms import StringField, BooleanField, IntegerField
-from wtforms import DecimalField, SelectField, TextAreaField
+from wtforms import DecimalField, TextAreaField
 from wtforms.validators import Required, Length, Optional
 
 from cakes.database import session
