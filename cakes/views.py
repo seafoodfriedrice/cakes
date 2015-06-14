@@ -34,25 +34,20 @@ def flash_form_errors(form):
 @app.route("/product/test_add", methods=["GET", "POST"])
 def test_add():
     form = ProductForm()
-    form.brand.choices = Brand.form_choices()
-    form.category.choices = Category.form_choices()
 
     if form.validate_on_submit():
         product = Product(name=form.name.data)
         product.notes = Notes(text=form.notes.data)
-        brand = session.query(Brand).get(form.brand.data)
-        product.brand = brand
-        category = session.query(Category).get(form.category.data)
-        product.category = category
 
-        for field in ['color', 'quantity', 'price', 'favorite']:
+        for field in ['category', 'brand', 'color', 'quantity',
+                      'price', 'favorite']:
             setattr(product, field, getattr(form, field).data)
 
         session.add(product)
         session.commit()
 
         message = "{}Mine!{} Added {} {} {}{}{} to your collection.".format(
-            "<strong>", "</strong>", brand.name, product.name,
+            "<strong>", "</strong>", form.brand.data, product.name,
             '<a href="#" class="alert-link">', product.color, "</a>")
         flash(message, "success")
 
