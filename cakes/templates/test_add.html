@@ -58,7 +58,17 @@ $(document).ready(function() {
 
             <div class="form-group">
                 {{ form.quantity.label(class="col-sm-4 control-label") }}
-                <div class="col-sm-8">{{ form.quantity(class="form-control", value=1) }}</div>
+                <div class="col-sm-4">
+                    <div class="input-group quantity-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default quantity-btn" type="button">-</button>
+                        </span>
+                        {{ form.quantity(class="form-control", value=1, id="quantity-input") }}
+                        <span class="input-group-btn">
+                            <button class="btn btn-default quantity-btn" type="button">+</button>
+                        </span>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
