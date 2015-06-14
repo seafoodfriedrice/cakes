@@ -13,11 +13,6 @@ class Brand(Base):
     name = Column(String(48), nullable=False, unique=True)
     products = relationship('Product', backref='brand')
 
-    @classmethod
-    def form_choices(cls):
-        return [(cls.id, cls.name)
-                for cls in session.query(cls).order_by(cls.name).all()]
-
 
 class Product(Base):
     __tablename__ = "products"
@@ -54,11 +49,6 @@ class Category(Base):
     name = Column(String(24), unique=True)
     sub_categories = relationship('SubCategory', backref='category')
     products = relationship('Product', backref='category')
-
-    @classmethod
-    def form_choices(cls):
-        return [(cls.id, cls.name)
-                for cls in session.query(cls).order_by(cls.name).all()]
 
 
 class SubCategory(Base):
