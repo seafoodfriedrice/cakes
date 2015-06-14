@@ -11,7 +11,7 @@ class ProductForm(Form):
     brand = SelectField(u'Brand', coerce=int, validators=[Required()])
     name = StringField(u'Product Name', validators=[Required()])
     color = StringField(u'Color', validators=[Length(max=48)])
-    quantity = IntegerField(u'Quantity', default=0, validators=[Optional()])
+    quantity = IntegerField(u'Quantity', default=1, validators=[Optional()])
     price = DecimalField(u'Price', default=0.0, validators=[Optional()])
     favorite = BooleanField(u'Favorite', default=False, validators=[Optional()])
     notes = TextAreaField(u'Product Notes', validators=[Optional()])
