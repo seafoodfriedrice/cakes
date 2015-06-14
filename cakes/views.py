@@ -38,21 +38,33 @@ def test_add():
     form.category.choices = Category.form_choices()
 
     if form.validate_on_submit():
-        brand = session.query(Brand).get(form.brand.data)
-        category = session.query(Category).get(form.category.data)
         product = Product(name=form.name.data)
-        product.brand = brand
-        product.category = category
-        product.color = form.color.data
-        product.price = form.price.data
-        product.quantity = form.quantity.data
-        product.favorite = form.favorite.data
         product.notes = Notes(text=form.notes.data)
+        brand = session.query(Brand).get(form.brand.data)
+        product.brand = brand
+        category = session.query(Category).get(form.category.data)
+        product.category = category
+
+        for field in ['color', 'quantity', 'price', 'favorite']:
+            setattr(product, field, getattr(form, field).data)
 
         session.add(product)
         session.commit()
 
-        return redirect(url_for("products"))
+        message = "{}Mine!{} Added {} {} {}{}{} to your collection.".format(
+            "<strong>", "</strong>", brand.name, product.name,
+            '<a href="#" class="alert-link">', product.color, "</a>")
+        flash(message, "success")
+
+        if request.form["submit"] == "Add":
+            return redirect(url_for("products"))
+        # Redirect back to test_add() when
+        # Add Another button is pressed
+        else:
+            # Clear out the color form so we can quickly add
+            # products that are similar in category and brand
+            form.color.data = None
+            return render_template("test_add.html", form=form)
     else:
         flash_form_errors(form)
 
