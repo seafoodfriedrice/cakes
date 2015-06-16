@@ -36,7 +36,7 @@ class Product(Base):
             "product_name": self.name,
             "product_color": self.color,
             "price": self.price,
-            "notes": self.notes.text
+            "notes": getattr(self.notes, "text", "")
 
         }
         return product
