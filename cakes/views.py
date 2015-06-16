@@ -2,18 +2,49 @@ import re
 from datetime import datetime
 
 from flask import render_template, request, redirect, url_for, flash
+from flask.ext.login import login_user, logout_user, login_required
+from flask.ext.login import current_user
 from sqlalchemy import exc
 from sqlalchemy import func
+from werkzeug.security import check_password_hash
 
 from cakes import app
 from cakes.database import session
 from cakes.models import Brand, Category, SubCategory, Product, Notes
+from cakes.models import User
 from cakes.forms import ProductForm
 
 
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        user = session.query(User).filter(
+            User.username == username).first()
+        if not user or not check_password_hash(user.password,
+                                                   password):
+            flash("Incorrect username or password", "danger")
+            return redirect(url_for("login"))
+        login_user(user)
+        return redirect(request.args.get("next") or url_for("products"))
+    else:
+        return render_template("login.html")
+
+
+@app.route("/logout", methods=["GET"])
+def logout():
+    if current_user.is_authenticated():
+        logout_user()
+        return render_template("logout.html")
+    else:
+        return render_template("login.html")
+
+
 @app.route("/")
 @app.route("/products")
+@login_required
 def products():
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
     categories = session.query(Category).order_by(Category.name.asc()).all()
@@ -32,6 +63,7 @@ def flash_form_errors(form):
                 error), "danger")
 
 @app.route("/product/test_add", methods=["GET", "POST"])
+@login_required
 def test_add():
     form = ProductForm()
 
@@ -65,6 +97,7 @@ def test_add():
     return render_template("test_add.html", form=form)
 
 @app.route("/product/test_edit/<int:id>", methods=["GET", "POST"])
+@login_required
 def test_edit(id):
     product = session.query(Product).get(id)
     form = ProductForm(obj=product)
@@ -102,6 +135,7 @@ def test_edit(id):
     return render_template("test_add.html", form=form)
 
 @app.route("/product/add", methods=["GET", "POST"])
+@login_required
 def product_add():
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
     categories = session.query(Category).order_by(Category.name.asc()).all()
@@ -163,6 +197,7 @@ def product_add():
 
 
 @app.route("/product/edit/<int:id>", methods=["GET", "POST"])
+@login_required
 def product_edit(id):
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
     categories = session.query(Category).order_by(Category.name.asc()).all()
@@ -225,6 +260,7 @@ def product_edit(id):
 
 
 @app.route("/products/brands/<int:id>", methods=["GET", "POST"])
+@login_required
 def brand(id):
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
     categories = session.query(Category).order_by(Category.name.asc()).all()
@@ -251,6 +287,7 @@ def brand(id):
 
 
 @app.route("/brand/add", methods=["GET", "POST"])
+@login_required
 def brand_add():
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
     categories = session.query(Category).order_by(Category.name.asc()).all()
@@ -277,6 +314,7 @@ def brand_add():
 
 
 @app.route("/products/categories/<int:id>", methods=["GET", "POST"])
+@login_required
 def category(id):
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
     categories = session.query(Category).order_by(Category.name.asc()).all()
@@ -303,6 +341,7 @@ def category(id):
 
 
 @app.route("/category/add", methods=["GET", "POST"])
+@login_required
 def category_add():
     brands = session.query(Brand).order_by(Brand.name.asc()).all()
     categories = session.query(Category).order_by(Category.name.asc()).all()

@@ -2,10 +2,13 @@ import os
 
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
+from getpass import getpass
+from werkzeug.security import generate_password_hash
 
 from cakes import app
 from cakes.database import Base, session
 from cakes.models import Brand, Category, SubCategory, Product, Notes
+from cakes.models import User
 
 
 manager = Manager(app)
@@ -47,6 +50,23 @@ def seed():
     byterry.products.append(product)
     session.add(product)
     session.commit()
+
+@manager.command
+def add_user():
+    name = raw_input("Name: ")
+    if session.query(User).filter_by(username=name).first():
+        print "User already exists."
+        return
+
+    password = ""
+    password_2 = ""
+    while not (password and password_2) or password != password_2:
+        password = getpass("Password: ")
+        password_2 = getpass("Re-enter password: ")
+    user = User(username=name, password=generate_password_hash(password))
+    session.add(user)
+    session.commit()
+
 
 class DB(object):
     def __init__(self, metadata):

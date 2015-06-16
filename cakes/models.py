@@ -2,6 +2,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Float, Integer, String, ForeignKey, Boolean
+from flask.ext.login import UserMixin
 
 from cakes.database import Base, engine, session
 
@@ -66,6 +67,14 @@ class Notes(Base):
     id = Column(Integer, primary_key=True)
     text = Column(String(256))
     item_id = Column(Integer, ForeignKey('products.id'))
+
+
+class User(Base, UserMixin):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String(32), unique=True)
+    password = Column(String(128))
 
 
 Base.metadata.create_all(engine)
