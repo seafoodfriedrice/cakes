@@ -36,8 +36,7 @@ def test_add():
     form = ProductForm()
 
     if form.validate_on_submit():
-        product = Product(name=form.name.data)
-        product.notes = Notes(text=form.notes.data)
+        product = Product(name=form.name.data, note=form.notes.data)
 
         for field in ['category', 'brand', 'color', 'quantity',
                       'price', 'favorite']:
@@ -46,7 +45,44 @@ def test_add():
         session.add(product)
         session.commit()
 
-        message = "{}Mine!{} Added {} {} {}{}{} to your collection.".format(
+        href_url_for = url_for("product_edit", id=product.id)
+        message = "{}Mine!{} Added {} {} <a href='{}' class='alert-link'>{}</a> to your collection.".format(
+            "<strong>", "</strong>", form.brand.data, product.name, href_url_for, product.color)
+        flash(message, "success")
+
+        if request.form["submit"] == "Add":
+            return redirect(url_for("products"))
+        # Redirect back to test_add() when
+        # Add Another button is pressed
+        else:
+            # Clear out the color form so we can quickly add
+            # products that are similar in category and brand
+            form.color.data = None
+            return render_template("test_add.html", form=form)
+    else:
+        flash_form_errors(form)
+
+    return render_template("test_add.html", form=form)
+
+@app.route("/product/test_edit/<int:id>", methods=["GET", "POST"])
+def test_edit(id):
+    product = session.query(Product).get(id)
+    form = ProductForm(obj=product)
+    # TODO: Need to refactor models.py to merge Notes into
+    #       Product so we don't have to stuff like this
+    #form.notes.data = product.notes.text
+
+    if request.method == "POST" and form.validate_on_submit():
+        product.notes.text = request.form["notes"]
+
+        for field in ['category', 'brand', 'color', 'quantity',
+                      'price', 'favorite']:
+            setattr(product, field, getattr(form, field).data)
+
+        session.add(product)
+        session.commit()
+
+        message = "{}Done!{} Edited {} {} {}{}{} successfully.".format(
             "<strong>", "</strong>", form.brand.data, product.name,
             '<a href="#" class="alert-link">', product.color, "</a>")
         flash(message, "success")
