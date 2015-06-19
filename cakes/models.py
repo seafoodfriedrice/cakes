@@ -26,7 +26,7 @@ class Product(Base):
     category_id = Column(Integer, ForeignKey('categories.id'))
     sub_category_id = Column(Integer, ForeignKey('sub_categories.id'))
     brand_id = Column(Integer, ForeignKey('brands.id'))
-    notes = relationship('Notes', backref='Product', uselist=False)
+    notes = Column(String(2048))
     favorite = Column(Boolean, default=True)
 
     def as_dictionary(self):
@@ -37,7 +37,7 @@ class Product(Base):
             "product_name": self.name,
             "product_color": self.color,
             "price": self.price,
-            "notes": getattr(self.notes, "text", "")
+            "notes": self.notes
 
         }
         return product
@@ -59,14 +59,6 @@ class SubCategory(Base):
     name = Column(String(24), unique=True)
     category_id = Column(Integer, ForeignKey('categories.id'))
     products = relationship('Product', backref='sub_category')
-
-
-class Notes(Base):
-    __tablename__ = "notes"
-    
-    id = Column(Integer, primary_key=True)
-    text = Column(String(256))
-    item_id = Column(Integer, ForeignKey('products.id'))
 
 
 class User(Base, UserMixin):
