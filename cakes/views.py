@@ -10,7 +10,7 @@ from werkzeug.security import check_password_hash
 
 from cakes import app
 from cakes.database import session
-from cakes.models import Brand, Category, SubCategory, Product, Notes
+from cakes.models import Brand, Category, SubCategory, Product
 from cakes.models import User
 from cakes.forms import ProductForm
 
@@ -68,18 +68,17 @@ def test_add():
     form = ProductForm()
 
     if form.validate_on_submit():
-        product = Product(name=form.name.data, note=form.notes.data)
-
         for field in ['category', 'brand', 'color', 'quantity',
-                      'price', 'favorite']:
+                      'price', 'favorite', 'notes']:
             setattr(product, field, getattr(form, field).data)
 
         session.add(product)
         session.commit()
 
-        href_url_for = url_for("product_edit", id=product.id)
-        message = "{}Mine!{} Added {} {} <a href='{}' class='alert-link'>{}</a> to your collection.".format(
-            "<strong>", "</strong>", form.brand.data, product.name, href_url_for, product.color)
+        product_href = url_for("product_edit", id=product.id)
+        message = ("{}Mine!{} Added {} {} <a href='{}' class='alert-link'>{}"
+            "</a> to your collection.").format("<strong>", "</strong>",
+            form.brand.data, product.name, product_href, product.color)
         flash(message, "success")
 
         if request.form["submit"] == "Add":
@@ -101,15 +100,10 @@ def test_add():
 def test_edit(id):
     product = session.query(Product).get(id)
     form = ProductForm(obj=product)
-    # TODO: Need to refactor models.py to merge Notes into
-    #       Product so we don't have to stuff like this
-    #form.notes.data = product.notes.text
 
     if request.method == "POST" and form.validate_on_submit():
-        product.notes.text = request.form["notes"]
-
         for field in ['category', 'brand', 'color', 'quantity',
-                      'price', 'favorite']:
+                      'price', 'favorite', 'notes']:
             setattr(product, field, getattr(form, field).data)
 
         session.add(product)
