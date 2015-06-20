@@ -68,7 +68,8 @@ def test_add():
     form = ProductForm()
 
     if form.validate_on_submit():
-        for field in ['category', 'brand', 'color', 'quantity',
+        product = Product()
+        for field in ['category', 'brand', 'name', 'color', 'quantity',
                       'price', 'favorite', 'notes']:
             setattr(product, field, getattr(form, field).data)
 
@@ -83,17 +84,17 @@ def test_add():
 
         if request.form["submit"] == "Add":
             return redirect(url_for("products"))
-        # Redirect back to test_add() when
+        # Redirect back to product() when
         # Add Another button is pressed
         else:
             # Clear out the color form so we can quickly add
             # products that are similar in category and brand
             form.color.data = None
-            return render_template("test_add.html", form=form)
+            return render_template("product.html", form=form, action="Add")
     else:
         flash_form_errors(form)
 
-    return render_template("test_add.html", form=form)
+    return render_template("product.html", form=form, action="Add")
 
 @app.route("/product/test_edit/<int:id>", methods=["GET", "POST"])
 @login_required
@@ -102,7 +103,7 @@ def test_edit(id):
     form = ProductForm(obj=product)
 
     if request.method == "POST" and form.validate_on_submit():
-        for field in ['category', 'brand', 'color', 'quantity',
+        for field in ['category', 'brand', 'name', 'color', 'quantity',
                       'price', 'favorite', 'notes']:
             setattr(product, field, getattr(form, field).data)
 
@@ -113,20 +114,11 @@ def test_edit(id):
             "<strong>", "</strong>", form.brand.data, product.name,
             '<a href="#" class="alert-link">', product.color, "</a>")
         flash(message, "success")
-
-        if request.form["submit"] == "Add":
-            return redirect(url_for("products"))
-        # Redirect back to test_add() when
-        # Add Another button is pressed
-        else:
-            # Clear out the color form so we can quickly add
-            # products that are similar in category and brand
-            form.color.data = None
-            return render_template("test_add.html", form=form)
+        return redirect(url_for("products"))
     else:
         flash_form_errors(form)
 
-    return render_template("test_add.html", form=form)
+    return render_template("product.html", form=form, action="Edit")
 
 @app.route("/product/add", methods=["GET", "POST"])
 @login_required
