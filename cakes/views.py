@@ -62,9 +62,9 @@ def flash_form_errors(form):
                 getattr(form, field).label.text,
                 error), "danger")
 
-@app.route("/product/test_add", methods=["GET", "POST"])
+@app.route("/product/add", methods=["GET", "POST"])
 @login_required
-def test_add():
+def product_add():
     form = ProductForm()
 
     if form.validate_on_submit():
@@ -84,7 +84,7 @@ def test_add():
 
         if request.form["submit"] == "Add":
             return redirect(url_for("products"))
-        # Redirect back to product() when
+        # Redirect back to product_add() when
         # Add Another button is pressed
         else:
             # Clear out the color form so we can quickly add
@@ -96,9 +96,10 @@ def test_add():
 
     return render_template("product.html", form=form, action="Add")
 
-@app.route("/product/test_edit/<int:id>", methods=["GET", "POST"])
+
+@app.route("/product/<int:id>", methods=["GET", "POST"])
 @login_required
-def test_edit(id):
+def product_edit(id):
     product = session.query(Product).get(id)
     form = ProductForm(obj=product)
 
@@ -119,130 +120,6 @@ def test_edit(id):
         flash_form_errors(form)
 
     return render_template("product.html", form=form, action="Edit")
-
-@app.route("/product/add", methods=["GET", "POST"])
-@login_required
-def product_add():
-    brands = session.query(Brand).order_by(Brand.name.asc()).all()
-    categories = session.query(Category).order_by(Category.name.asc()).all()
-
-    if request.method == "POST":
-        brand = session.query(Brand).filter_by(
-            name=request.form["brand"]).first()
-        category = session.query(Category).filter_by(
-            name=request.form["category"]).first()
-
-        product_name = request.form["product-name"].strip().title()
-        product = Product(name=product_name)
-
-        if request.form["price"] != None:
-            product.price = request.form["price"]
-
-        product.quantity = request.form["quantity"]
-
-        product.favorite = request.form.get("is-favorite", False)
-        product.color = request.form.get("color", "").strip()
-        product.notes = Notes()
-        product.notes.text = request.form.get("notes")
-
-        brand.products.append(product)
-        category.products.append(product)
-
-        session.add_all([brand, category, product])
-
-        try:
-            session.commit()
-            message = "{}Mine!{} Added {} {} {}{}{} to your collection.".format(
-                "<strong>", "</strong>", brand.name, product_name,
-                "<em>", product.color, "</em>")
-            flash(message, "success")
-        except:
-            session.rollback()
-            message = "{}Uh-oh!{} Could not add {}{}{}.".format(
-                "<strong>", "</strong>", "<em>", product_name, "</em>")
-            flash(message, "danger")
-
-        if request.form["submit"] == "Add":
-            return redirect(url_for("products", brands=brands,
-                                    products=products, categories=categories))
-        # Redirect back to product_add() when Add Another button is pressed
-        else:
-            kwargs = {
-                "category": category,
-                "brand": brand,
-                "product": product,
-                "brands": brands,
-                "categories": categories,
-
-            }
-            return render_template("product_add.html", **kwargs)
-
-    else:
-         return render_template("product_add.html", brands=brands,
-                                     categories=categories)
-
-
-@app.route("/product/edit/<int:id>", methods=["GET", "POST"])
-@login_required
-def product_edit(id):
-    brands = session.query(Brand).order_by(Brand.name.asc()).all()
-    categories = session.query(Category).order_by(Category.name.asc()).all()
-    product = session.query(Product).get(id)
-
-    if request.method == "POST":
-
-        if request.form["submit"] == "Delete":
-            session.delete(product)
-            try:
-                session.commit()
-                message = "{}Bye-bye!{} {}{}{} removed from inventory.".format(
-                    "<strong>", "</strong>", "<em>", product.name, "</em>")
-                flash(message, "success")
-            except:
-                session.rollback()
-                message = "{}Oh noes!{} Couldn't delete {}{}{}.".format(
-                    "<strong>", "</strong>", "<em>", product.name, "</em>")
-                flash(error, "danger")
-
-            return redirect(url_for("products"))
-            
-        if request.form["submit"] == "Save":
-            product.name = request.form["product-name"].strip()
-            if request.form["color"]:
-                product.color = request.form["color"].strip().title()
-            if request.form["price"]:
-                product.price = float(request.form["price"].strip())
-            product.notes.text=request.form["notes"]
-
-            product.favorite = request.form.get("is-favorite", False)
-            product.quantity = request.form["quantity"]
-
-            category = session.query(Category).filter_by(
-                name=request.form["category"]).first()
-            category.products.append(product)
-
-            brand = session.query(Brand).filter_by(
-                name=request.form["brand"]).first()
-            brand.products.append(product)
-
-            session.add_all([category, brand, product])
-
-            try:
-                session.commit()
-                message = "{}Yay!{} {}{}{} has been updated.".format(
-                    "<strong>", "</strong>", "<em>", product.name, "</em>")
-                flash(message, "success")
-            except:
-                session.rollback()
-                message = "{}Uh-oh!{} Problem editing {}{}{}.".format(
-                    "<strong>", "</strong>", "<em>", product.name, "</em>")
-                flash(error, "danger")
-
-            return redirect(url_for("products"))
-
-    return render_template("product_edit.html", brands=brands,
-                           product=product, categories=categories)
-
 
 
 @app.route("/products/brands/<int:id>", methods=["GET", "POST"])
