@@ -2,9 +2,21 @@
 {% block body %}
 <ol class="breadcrumb">
     <li><a href="{{ url_for('products') }}">Products</a></li>
+{% if action == "Add" %}
     <li class="active">Add</li>
+{% endif %}
+{% if action == "Edit" %}
+    <li class="active">{{ form.name.data }} {{ form.color.data }}</li>
+{% endif %}
 </ol>
-<h2>Add Product</h2>
+<h3>
+{% if action == "Add" %}
+    Add Product
+{% endif %}
+{% if action == "Edit" %}
+    {{ form.name.data }} {{ form.color.data }}
+{% endif %}
+</h3>
 
 <hr />
 
@@ -63,7 +75,7 @@ $(document).ready(function() {
                         <span class="input-group-btn">
                             <button class="btn btn-default quantity-btn" type="button">-</button>
                         </span>
-                        {{ form.quantity(class="form-control", value=1, id="quantity-input") }}
+                        {{ form.quantity(class="form-control", value=form.quantity.data, id="quantity-input") }}
                         <span class="input-group-btn">
                             <button class="btn btn-default quantity-btn" type="button">+</button>
                         </span>
@@ -73,7 +85,7 @@ $(document).ready(function() {
 
             <div class="form-group">
                 {{ form.price.label(class="col-sm-4 control-label") }}
-                <div class="col-sm-8">{{ form.price(class="form-control", value=0.0) }}</div>
+                <div class="col-sm-8">{{ form.price(class="form-control", placeholder=0.0) }}</div>
             </div>
 
             <div class="form-group">
@@ -90,8 +102,13 @@ $(document).ready(function() {
             <div class="form-group">
                 <div class="col-md-offset-4 col-md-8">
                     <a href="{{ url_for('products') }}" type="button" class="btn btn-default">Cancel</a>
+                {% if action == "Add" %}
                     <button type="submit" name="submit" class="btn btn-primary" value="Add">Add</button>
                     <button type="submit" name="submit" class="btn btn-primary" value="Another">Add Another</button>
+                {% endif %}
+                {% if action == "Edit" %}
+                    <button type="submit" name="submit" class="btn btn-primary" value="Save">Save</button>
+                {% endif %}
                 </div>
             </div>
 
