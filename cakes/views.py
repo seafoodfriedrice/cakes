@@ -103,14 +103,13 @@ def product_edit(id):
     product = session.query(Product).get(id)
     form = ProductForm(obj=product)
 
-    if request.method == "POST" and form.validate_on_submit():
+    if (request.method == "POST" and request.form["submit"] == "Save" and
+            form.validate_on_submit()):
         for field in ['category', 'brand', 'name', 'color', 'quantity',
                       'price', 'favorite', 'notes']:
             setattr(product, field, getattr(form, field).data)
-
         session.add(product)
         session.commit()
-
         message = "{}Done!{} Edited {} {} {}{}{} successfully.".format(
             "<strong>", "</strong>", form.brand.data, product.name,
             '<a href="#" class="alert-link">', product.color, "</a>")
@@ -118,6 +117,14 @@ def product_edit(id):
         return redirect(url_for("products"))
     else:
         flash_form_errors(form)
+
+    if (request.method == "POST" and request.form["submit"] == "Delete"):
+        session.delete(product)
+        session.commit()
+        message = "{}Bye-bye!{} {}{}{} removed from inventory.".format(
+            "<strong>", "</strong>", "<em>", product.name, "</em>")
+        flash(message, "success")
+        return redirect(url_for("products"))
 
     return render_template("product.html", form=form, action="Edit")
 
