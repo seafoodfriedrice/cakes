@@ -66,6 +66,22 @@ def add_user():
     session.add(user)
     session.commit()
 
+@manager.command
+def reset_pw():
+    name = raw_input("Name: ")
+    user = session.query(User).filter_by(username=name).first()
+    if user:
+        password = ""
+        password_2 = ""
+        while not (password and password_2) or password != password_2:
+            password = getpass("Password: ")
+            password_2 = getpass("Re-enter password: ")
+        user.password =  password=generate_password_hash(password)
+        session.add(user)
+        session.commit()
+    else:
+        print "Could not find user {}.".format(name)
+        return
 
 class DB(object):
     def __init__(self, metadata):
