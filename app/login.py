@@ -1,6 +1,6 @@
 from flask.ext.login import LoginManager
 
-from cakes import app 
+from app import app 
 from .database import session
 from .models import User
 

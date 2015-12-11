@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Float, Integer, String, ForeignKey, Boolean
 from flask.ext.login import UserMixin
 
-from cakes.database import Base, engine, session
+from app.database import Base, engine, session
 
 
 class Brand(Base):

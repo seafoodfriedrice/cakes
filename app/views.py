@@ -8,11 +8,11 @@ from sqlalchemy import exc
 from sqlalchemy import func
 from werkzeug.security import check_password_hash
 
-from cakes import app
-from cakes.database import session
-from cakes.models import Brand, Category, SubCategory, Product
-from cakes.models import User
-from cakes.forms import ProductForm
+from app import app
+from app.database import session
+from app.models import Brand, Category, SubCategory, Product
+from app.models import User
+from app.forms import ProductForm
 
 
 

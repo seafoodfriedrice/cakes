@@ -4,8 +4,8 @@ from wtforms import StringField, BooleanField, IntegerField
 from wtforms import DecimalField, TextAreaField
 from wtforms.validators import Required, Length, Optional
 
-from cakes.database import session
-from cakes.models import Category, Brand
+from app.database import session
+from app.models import Category, Brand
 
 def category_names():
     return session.query(Category).order_by(Category.name)

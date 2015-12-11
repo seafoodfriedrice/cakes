@@ -1,4 +1,4 @@
-from cakes import app
+from app import app
 
 @app.template_filter()
 def newline_to_linebreak(text):

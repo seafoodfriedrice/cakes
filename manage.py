@@ -5,10 +5,10 @@ from flask.ext.migrate import Migrate, MigrateCommand
 from getpass import getpass
 from werkzeug.security import generate_password_hash
 
-from cakes import app
-from cakes.database import Base, session
-from cakes.models import Brand, Category, SubCategory, Product
-from cakes.models import User
+from app import app
+from app.database import Base, session
+from app.models import Brand, Category, SubCategory, Product
+from app.models import User
 
 
 manager = Manager(app)

@@ -1,2 +1,2 @@
-from cakes.database import session
-from cakes.models import *
+from app.database import session
+from app.models import *
