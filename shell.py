@@ -1,2 +1,2 @@
-from app.database import session
+from app import db
 from app.models import *
