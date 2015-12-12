@@ -6,7 +6,7 @@ class Brand(db.Model):
     __tablename__ = "brands"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(48), nullable=False, unique=True)
+    name = db.Column(db.String(64), nullable=False, unique=True)
     products = db.relationship('Product', backref='brand')
 
 
@@ -14,14 +14,14 @@ class Product(db.Model):
     __tablename__ = "products"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(48))
-    color = db.Column(db.String(48))
+    name = db.Column(db.String(128))
+    color = db.Column(db.String(64))
     quantity = db.Column(db.Integer, default=int(1))
     price = db.Column(db.Float)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     sub_category_id = db.Column(db.Integer, db.ForeignKey('sub_categories.id'))
     brand_id = db.Column(db.Integer, db.ForeignKey('brands.id'))
-    notes = db.Column(db.String(2048))
+    notes = db.Column(db.Text))
     favorite = db.Column(db.Boolean, default=True)
 
     def as_dictionary(self):
@@ -42,7 +42,7 @@ class Category(db.Model):
     __tablename__ = "categories"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(24), unique=True)
+    name = db.Column(db.String(64), unique=True)
     sub_categories = db.relationship('SubCategory', backref='category')
     products = db.relationship('Product', backref='category')
 
@@ -51,7 +51,7 @@ class SubCategory(db.Model):
     __tablename__ = "sub_categories"
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(24), unique=True)
+    name = db.Column(db.String(64), unique=True)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     products = db.relationship('Product', backref='sub_category')
 
