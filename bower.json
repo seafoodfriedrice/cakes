@@ -1,0 +1,19 @@
+{
+  "name": "cakes",
+  "description": "Inventory web application track cosmetics and skincare products",
+  "main": "index.js",
+  "authors": [
+    "Rodolf Sabalburo <rodolf.sabalburo@gmail.com>"
+  ],
+  "license": "BSD-2-Clause",
+  "homepage": "https://github.com/seafoodfriedrice/cakes",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
