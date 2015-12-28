@@ -1,13 +1,9 @@
 from flask import flash
 from flask.ext.wtf import Form
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
-from wtforms import StringField, BooleanField, IntegerField
-from wtforms import DecimalField, TextAreaField, FormField, FieldList
-from wtforms.validators import Required, Length, Optional
-from wtforms_alchemy import ModelForm, ModelFieldList, model_form_factory,\
-                            ModelFormField
-from wtforms.fields import FormField
-
+from wtforms import StringField
+from wtforms.validators import Optional
+from wtforms_alchemy import ModelForm, model_form_factory
 from app import db
 from app.models import Brand, Category, SubCategory, Product
 
@@ -34,24 +30,11 @@ def category_names():
 def sub_category_names():
     return SubCategory.query.order_by(SubCategory.name)
 
-'''
-class ProductForm(Form):
-    brand = QuerySelectField(get_label='name', query_factory=brand_names)
-    category = QuerySelectField(get_label='name', query_factory=category_names)
-    sub_category = QuerySelectField(get_label='name',
-        query_factory=sub_category_names)
-    name = StringField(u'Product Name', validators=[Required()])
-    color = StringField(u'Color', validators=[Length(max=48)])
-    quantity = IntegerField(u'Quantity', default=1, validators=[Optional()])
-    price = DecimalField(u'Price', validators=[Optional()])
-    favorite = BooleanField(u'Favorite', default=False, validators=[Optional()])
-    stars = DecimalField(u'Stars', validators=[Optional()])
-    review = TextAreaField(u'Review', validators=[Optional()])
-    notes = TextAreaField(u'Notes', validators=[Optional()])
-'''
+
 class BrandForm(ModelForm):
     class Meta:
         model = Brand
+
 
 class SubCategoryForm(ModelForm):
     class Meta:
@@ -63,10 +46,14 @@ class CategoryForm(ModelForm):
         model = Category
 
     name = StringField(validators=[Optional()])
+    category = QuerySelectField(query_factory=category_names)
     sub_categories = StringField(u'New Subcategory')
-    sub_category = QuerySelectField(get_label='name',
-        query_factory=sub_category_names, allow_blank=True)
-    
+    sub_category = QuerySelectField(
+        get_label='name',
+        query_factory=sub_category_names,
+        allow_blank=True
+    )
+
 
 class ProductForm(ModelForm):
     class Meta:
@@ -75,18 +62,3 @@ class ProductForm(ModelForm):
     brand = QuerySelectField(query_factory=brand_names)
     category = QuerySelectField(query_factory=category_names)
     sub_category = QuerySelectField(query_factory=sub_category_names)
-
-'''
-class CategoryForm(Form):
-    name = StringField(u'New Category', validators=[Length(max=64)])
-    sub_category = QuerySelectField(get_label='name',
-        query_factory=sub_category_names, allow_blank=True)
-    sub_categories = StringField(u'New Subcategory')
-'''
-
-'''
-class SubCategoryForm(Form):
-    name = StringField(u'Subcategory Name',
-                       validators=[Required(), Length(max=64)])
-    category = QuerySelectField(get_label='name', query_factory=category_names)
-    '''
