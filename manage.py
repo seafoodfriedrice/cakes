@@ -1,5 +1,6 @@
 import os
 
+from livereload import Server
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
 from getpass import getpass
@@ -15,8 +16,12 @@ manager = Manager(app)
 
 @manager.command
 def run():
-    port = int(os.environ.get('PORT', 8080))
-    app.run(host='0.0.0.0', port=port)
+    server = Server(app.wsgi_app)
+    server.watch('app/*.py')
+    server.watch('app/templates/*.html')
+    server.watch('app/static/css/*.css')
+    server.watch('app/static/js/*.js')
+    server.serve(host='0.0.0.0')
 
 @manager.command
 def seed():

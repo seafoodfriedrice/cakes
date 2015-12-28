@@ -7,36 +7,31 @@
 {% endmacro %}
 
 {% macro render_select(items, id_name, selected) %}
-<select class="form-control" id="{{ id_name }}" name="{{ id_name }}">
-    {% for item in items %}
-    {% if item.name == selected %}
-    <option selected>{{ item.name }}</option>
-    {% else %}
-    <option>{{ item.name }}</option>
-    {% endif %}
-    {% endfor %}
+<select class="form-control onload-subcategory" id="{{ id_name }}"
+  name="{{ id_name }}">
+{% for item in items %}
+  {% if item.name == selected %}
+  <option value="{{ item.id }}" selected>{{ item.name }}</option>
+  {% else %}
+  <option value="{{ item.id }}" >{{ item.name }}</option>
+  {% endif %}
+{% endfor %}
 </select>
 {% endmacro %}
 
 {% macro render_product(product) %}
 <tr>
-    <td>
-    {%- if product.favorite %}
-        <span class="glyphicon glyphicon-star"></span>
-    {% endif -%}
-    </td>
-    <td><a href="{{ url_for('category', id=product.category.id) }}">{{ product.category.name }}</a></td>
-    <td>{{ product.sub_category.name }}</td>
-    <td><a href="{{ url_for('brand', id=product.brand.id) }}">{{ product.brand.name }}</a></td>
-    <td><a href="{{ url_for('product_edit', id=product.id) }}">{{ product.name }}</a></td>
-    <td>{{ product.color }}</td>
+    <td><a href="{{ url_for('category', id=product.category.id) }}">
+          {{ product.category.name }}{% if product.sub_category.name %}
+          <i class="material-icons gt-icon">navigate_next</i>
+           {{ product.sub_category.name }}{% endif %}</a></td>
+    <td><a href="{{ url_for('brand', id=product.brand.id) }}">
+          {{ product.brand.name }}</a></td>
+    <td><a href="{{ url_for('product_get', id=product.id) }}">
+          {{ product.name }} {{ product.color }}</a></td>
     <td>{{ product.quantity }}</td>
-    {% if not product.price or product.price == 0 -%}
-    <td></td>
-    {% else %}
     <td>${{ '%0.2f' | format(product.price|float) }}</td>
-    {%- endif %}
-    <td>{% if product.notes %}{{ product.notes | newline_to_linebreak | safe }}{% endif %}</td>
+    <td></td>
 </tr>
 {% endmacro %}
 

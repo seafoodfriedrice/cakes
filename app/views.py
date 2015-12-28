@@ -8,11 +8,10 @@ from sqlalchemy import exc
 from sqlalchemy import func
 from werkzeug.security import check_password_hash
 
-from app import app
-from app.database import session
+from app import app, db
 from app.models import Brand, Category, SubCategory, Product
 from app.models import User
-from app.forms import ProductForm
+from app.forms import ProductForm, CategoryForm, SubCategoryForm, flash_errors
 
 
 
@@ -45,59 +44,38 @@ def logout():
 @app.route("/")
 @app.route("/products")
 @login_required
-def products():
-    brands = session.query(Brand).order_by(Brand.name.asc()).all()
-    categories = session.query(Category).order_by(Category.name.asc()).all()
-
-    products = session.query(Product).order_by(Product.id.desc()).all()
-    price_total = session.query(func.sum(Product.price).label(
-        'product_price_total')).scalar()
+def products_get():
+    brands = Brand.query.order_by(Brand.name.asc()).all()
+    categories = Category.query.order_by(Category.name.asc()).all()
+    products = Product.query.order_by(Product.id.desc()).all()
     return render_template("products.html", brands=brands, products=products,
-                           categories=categories, price_total=price_total)
+                           categories=categories)
 
-def flash_form_errors(form):
-    for field, errors in form.errors.items():
-        for error in errors:
-            flash(u"Error in the %s field - %s" % (
-                getattr(form, field).label.text,
-                error), "danger")
 
-@app.route("/product/add", methods=["GET", "POST"])
-@login_required
+@app.route("/products/add", methods=["GET", "POST"])
+#@login_required
 def product_add():
     form = ProductForm()
-
+    product = Product()
     if form.validate_on_submit():
-        product = Product()
-        for field in ['category', 'brand', 'name', 'color', 'quantity',
-                      'price', 'favorite', 'notes']:
-            setattr(product, field, getattr(form, field).data)
-
-        session.add(product)
-        session.commit()
-
-        product_href = url_for("product_edit", id=product.id)
-        message = ("{}Mine!{} Added {} {} <a href='{}' class='alert-link'>{}"
-            "</a> to your collection.").format("<strong>", "</strong>",
-            form.brand.data, product.name, product_href, product.color)
-        flash(message, "success")
-
-        if request.form["submit"] == "Add":
-            return redirect(url_for("products"))
-        # Redirect back to product_add() when
-        # Add Another button is pressed
-        else:
-            # Clear out the color form so we can quickly add
-            # products that are similar in category and brand
-            form.color.data = None
-            return render_template("product.html", form=form, action="Add")
+        form.populate_obj(product)
+        db.session.add(product)
+        db.session.commit()
+        return redirect(url_for("products_get"))
     else:
-        flash_form_errors(form)
+        flash_errors(form)
+    return render_template("product_add2.html", form=form)
 
-    return render_template("product.html", form=form, action="Add")
 
+@app.route("/products/<int:id>", methods=["GET", "POST"])
+#@login_required
+def product_get(id):
+    product = Product.query.get(id)
+    form = ProductForm(obj=product)
+    return render_template("product2.html", form=form)
 
-@app.route("/product/<int:id>", methods=["GET", "POST"])
+'''
+@app.route("/products/<int:id>", methods=["GET", "POST"])
 @login_required
 def product_edit(id):
     product = session.query(Product).get(id)
@@ -127,6 +105,7 @@ def product_edit(id):
         return redirect(url_for("products"))
 
     return render_template("product.html", form=form, action="Edit")
+'''
 
 
 @app.route("/products/brands/<int:id>", methods=["GET", "POST"])
@@ -210,27 +189,31 @@ def category(id):
                            categories=categories)
 
 
-@app.route("/category/add", methods=["GET", "POST"])
+@app.route("/categories/add", methods=["GET", "POST"])
 @login_required
 def category_add():
-    brands = session.query(Brand).order_by(Brand.name.asc()).all()
-    categories = session.query(Category).order_by(Category.name.asc()).all()
+    categories = Category.query.order_by(Category.name.asc()).all()
+    form = CategoryForm()
+    subcategory = SubCategory()
+    category = Category()
+    if form.validate_on_submit() and request.method == "POST":
+        if form.sub_categories.data.strip():
+            category = Category.query.filter(
+                Category.name == form.name.data
+            ).first()
+            subcategory.name = form.sub_categories.data
+            category.sub_categories.append(subcategory)
+        del form.sub_categories
+        form.populate_obj(category)
+        db.session.add(category)
+        db.session.commit()
+        return redirect(url_for("categories"))
+    else:
+        flash_errors(form)
+    return render_template("category_add.html", categories=categories,
+                           form=form)
 
-    if request.method == "POST":
-        category = Category(name=request.form["category-name"].strip())
-        session.add(category)
-
-        try:
-            session.commit()
-            message = "{}More!{} Added {}{}{} to your Categories.".format(
-                "<strong>", "</strong>", "<em>", category.name, "</em>")
-            flash(message, "success")
-        except:
-            session.rollback()
-            message = "{}Oh no!{} Problem adding {}{}{} to Categories.".format(
-                "<strong>", "</strong>", "<em>", category.name, "</em>")
-            flash(message, "danger")
-
-        return redirect(url_for("products"))
-
-    return render_template("category_add.html", brands=brands, categories=categories)
+@app.route("/categories")
+def categories():
+    c = [category.name for category in Category.query.all()]
+    return ', '.join(c)

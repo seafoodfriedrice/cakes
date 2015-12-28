@@ -1,32 +1,38 @@
 {% extends "base.html" %}
 {% block body %}
 <h2>Add Category</h2>
-<hr />
-<div class="container-fluid">
-
-    <form role="form" method="POST" class="form-horizontal">
-
-        <div class="form-group">
-            <label for="current-categories" class="col-sm-3 control-label">Current Categories</label>
-            <div class="col-sm-4">
-                {{ macros.render_select(categories, "current-category") }}
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="new-category" class="col-sm-3 control-label">New Category</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="category-name" name="category-name" placeholder="Skincare" required>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-3 col-md-4">
-                <a href="{{ url_for('products') }}" type="button" class="btn btn-default">Cancel</a>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </div>
-
-    </form>
-
-</div> <!-- /container-fluid -->
-<hr />
+<div class="row">
+  <form class="col s12" method="POST">
+    {{ form.csrf_token }}
+    <div class="row">
+      <div class="input-field col s6">
+        {{ macros.render_select(categories, "category") }}
+        <label for="category">Current Categories</label>
+      </div>
+      <div class="input-field col s6">
+        {{ form.sub_category }}
+        <label for="subcategory">Current Subcategories</label>
+        <p class="add-subcategory"><a href="#">
+          Add new subcategory to <span></span></a></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6 category-input">
+        {{ form.name(length=64) }}
+        {{ form.name.label }}
+      </div>
+      <div class="input-field col s6 subcategory-input">
+        {{ form.sub_categories(disabled=True) }}
+        {{ form.sub_categories.label }}
+        <p class="close-subcategory"><a href="#">
+          Close</a></p>
+      </div>
+    </div>
+    <a href="{{ url_for('products_get') }}" type="button"
+      class="btn waves-effect waves-light">Cancel</a>
+    <button class="btn waves-effect waves-light category-submit" type="submit"
+      name="action"> Submit <i class="material-icons right">send</i>
+    </button>
+  </form>
+</div>
 {% endblock %}

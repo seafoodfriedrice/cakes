@@ -1,0 +1,22 @@
+.subcategory-input, .close-subcategory {
+  display: none;
+}
+
+.close-subcategory {
+  margin-top: 0;
+}
+
+.gt-icon {
+  position: relative;
+  margin-top: -6px;
+  padding: 0;
+  top: 6px;
+}
+
+ul.tabs {
+  margin-bottom: 35px;
+}
+
+.save-btn {
+  margin-left: 52px;
+}
