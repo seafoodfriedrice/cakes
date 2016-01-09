@@ -1,3 +1,8 @@
+{% macro btn_add(class_) %}
+<a class="waves-effect waves-light btn">Add</a>
+{% endmacro %}
+
+
 {% macro render_dropdown(item, view) %}
 <li>
     <a href="{{ url_for(view, id=item.id) }}">
@@ -6,39 +11,11 @@
 </li>
 {% endmacro %}
 
-{% macro render_select(items, id_name, selected) %}
-<select class="form-control onload-subcategory" id="{{ id_name }}"
-  name="{{ id_name }}">
-{% for item in items %}
-  {% if item.name == selected %}
-  <option value="{{ item.id }}" selected>{{ item.name }}</option>
-  {% else %}
-  <option value="{{ item.id }}" >{{ item.name }}</option>
-  {% endif %}
-{% endfor %}
-</select>
-{% endmacro %}
-
-{% macro render_product(product) %}
-<tr>
-    <td><a href="{{ url_for('category', id=product.category.id) }}">
-          {{ product.category.name }}{% if product.sub_category.name %}
-          <i class="material-icons gt-icon">navigate_next</i>
-           {{ product.sub_category.name }}{% endif %}</a></td>
-    <td><a href="{{ url_for('brand', id=product.brand.id) }}">
-          {{ product.brand.name }}</a></td>
-    <td><a href="{{ url_for('product_get', id=product.id) }}">
-          {{ product.name }} {{ product.color }}</a></td>
-    <td>{{ product.quantity }}</td>
-    <td>${{ '%0.2f' | format(product.price|float) }}</td>
-    <td></td>
-</tr>
-{% endmacro %}
 
 {% macro render_product_by_brand(product) %}
 <tr>
     <td>{{ product.category.name }}</td>
-    <td>{{ product.sub_category.name }}</td>
+    <td>{{ product.subcategory.name }}</td>
     <td><a href="{{ url_for('product_edit', id=product.id) }}">{{ product.name }}</a></td>
     <td>{{ product.color }}</td>
     {% if not product.price or product.price == 0 -%}
@@ -49,6 +26,7 @@
     <td>{% if product.notes %}{{ product.notes }}{% endif %}</td>
 </tr>
 {% endmacro %}
+
 
 {% macro render_product_by_category(product) %}
 <tr>

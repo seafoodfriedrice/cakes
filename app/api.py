@@ -1,27 +1,48 @@
-import json
+import pdb
+import simplejson
+from pprint import pprint
 
-from flask import Response
+from flask import Response, jsonify, request, json
+from wtforms_json import flatten_json
 
 from app import app, db
-from app.database import session
-from app.models import Product, Category, SubCategory
+from .forms import ProductForm
+from .models import Product, Brand, Category, Subcategory
 
 
-@app.route("/api/products", methods=["GET"])
+@app.route("/api/products", methods=["GET", "POST"])
 def api_products():
-    """ Return list of all products """
+    if request.method == "GET":
+        products = Product.query.all()
+        data = simplejson.dumps([product.as_dict() for product in products])
+        return Response(data, 200, mimetype="application/json")
+    if request.method == "POST":
+        form = ProductForm.from_json(request.json)
+        data = form.patch_data
+        product = Product(**data)
+        db.session.add(product)
+        db.session.commit()
+        return jsonify(request.json)
 
-    products = Product.query.all()
-    data = json.dumps([product.as_dict() for product in products])
-    return Response(data, 200, mimetype="application/json")
+@app.route("/api/products/<int:id>", methods=["GET", "PUT"])
+def api_product(id):
+    product = Product.query.get_or_404(id)
+    if request.method == "GET":
+        return jsonify(product._as_dict())
+    if request.method == "PUT":
+        form = ProductForm.from_json(request.json)
+        form.populate_obj(product)
+        db.session.commit()
+        return jsonify(request.json)
 
 @app.route("/api/categories/<int:id>/subcategories", methods=["GET"])
 def api_subcategories(id):
-    """ Return list of subcategories by category.id """
-
-    sub_categories = SubCategory.query.join(Category).filter(
-        Category.id == id
-    ).all()
-    data = json.dumps([sub_category.as_dict()
-                       for sub_category in sub_categories])
+    """ Return list of subcategories by parent category.id """
+    subcategories = (
+        Subcategory.query.join(Category)
+        .filter(Category.id == id)
+        .all()
+    )
+    data = simplejson.dumps([subcategory.as_dict()
+                             for subcategory in subcategories])
     return Response(data, 200, mimetype="application/json")

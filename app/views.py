@@ -1,18 +1,12 @@
-import re
-from datetime import datetime
-
 from flask import render_template, request, redirect, url_for, flash
-from flask.ext.login import login_user, logout_user, login_required
-from flask.ext.login import current_user
-from sqlalchemy import exc
-from sqlalchemy import func
+from flask.ext.login import login_user, logout_user, login_required,\
+                            current_user
 from werkzeug.security import check_password_hash
 
 from app import app, db
-from app.models import Brand, Category, SubCategory, Product
-from app.models import User
-from app.forms import ProductForm, CategoryForm, SubCategoryForm, flash_errors
-
+from .forms import ProductForm, CategoryForm
+from .models import Brand, Category, Subcategory, Product, User
+from .utils import flash_errors
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -31,26 +25,20 @@ def login():
     else:
         return render_template("login.html")
 
-
 @app.route("/logout", methods=["GET"])
 def logout():
     if current_user.is_authenticated():
         logout_user()
         return render_template("logout.html")
-    else:
-        return render_template("login.html")
-
+    return render_template("login.html")
 
 @app.route("/")
-@app.route("/products")
-@login_required
-def products_get():
-    brands = Brand.query.order_by(Brand.name.asc()).all()
-    categories = Category.query.order_by(Category.name.asc()).all()
+@app.route("/products", methods=["GET"])
+#@login_required
+def products():
     products = Product.query.order_by(Product.id.desc()).all()
-    return render_template("products.html", brands=brands, products=products,
-                           categories=categories)
-
+    form = ProductForm()
+    return render_template("products.html", products=products, form=form)
 
 @app.route("/products/add", methods=["GET", "POST"])
 #@login_required
@@ -64,7 +52,7 @@ def product_add():
         return redirect(url_for("products_get"))
     else:
         flash_errors(form)
-    return render_template("product_add2.html", form=form)
+    return render_template("product.html", form=form)
 
 
 @app.route("/products/<int:id>", methods=["GET", "POST"])
@@ -72,41 +60,7 @@ def product_add():
 def product_get(id):
     product = Product.query.get(id)
     form = ProductForm(obj=product)
-    return render_template("product2.html", form=form)
-
-'''
-@app.route("/products/<int:id>", methods=["GET", "POST"])
-@login_required
-def product_edit(id):
-    product = session.query(Product).get(id)
-    form = ProductForm(obj=product)
-
-    if (request.method == "POST" and request.form["submit"] == "Save" and
-            form.validate_on_submit()):
-        for field in ['category', 'brand', 'name', 'color', 'quantity',
-                      'price', 'favorite', 'notes']:
-            setattr(product, field, getattr(form, field).data)
-        session.add(product)
-        session.commit()
-        message = "{}Done!{} Edited {} {} {}{}{} successfully.".format(
-            "<strong>", "</strong>", form.brand.data, product.name,
-            '<a href="#" class="alert-link">', product.color, "</a>")
-        flash(message, "success")
-        return redirect(url_for("products"))
-    else:
-        flash_form_errors(form)
-
-    if (request.method == "POST" and request.form["submit"] == "Delete"):
-        session.delete(product)
-        session.commit()
-        message = "{}Bye-bye!{} {}{}{} removed from inventory.".format(
-            "<strong>", "</strong>", "<em>", product.name, "</em>")
-        flash(message, "success")
-        return redirect(url_for("products"))
-
-    return render_template("product.html", form=form, action="Edit")
-'''
-
+    return render_template("product.html", form=form)
 
 @app.route("/products/brands/<int:id>", methods=["GET", "POST"])
 @login_required
@@ -158,7 +112,8 @@ def brand_add():
 
         return redirect(url_for("products"))
 
-    return render_template("brand_add.html", brands=brands, categories=categories)
+    return render_template("brand_add.html", brands=brands,
+                           categories=categories)
 
 
 
@@ -194,16 +149,15 @@ def category(id):
 def category_add():
     categories = Category.query.order_by(Category.name.asc()).all()
     form = CategoryForm()
-    subcategory = SubCategory()
+    subcategory = Subcategory()
     category = Category()
     if form.validate_on_submit() and request.method == "POST":
-        if form.sub_categories.data.strip():
-            category = Category.query.filter(
-                Category.name == form.name.data
-            ).first()
-            subcategory.name = form.sub_categories.data
-            category.sub_categories.append(subcategory)
-        del form.sub_categories
+        if form.subcategories.data.strip():
+            category = (Category.query.filter(Category.name == form.name.data)
+                        .first())
+            subcategory.name = form.subcategories.data
+            category.subcategories.append(subcategory)
+        del form.subcategories
         form.populate_obj(category)
         db.session.add(category)
         db.session.commit()

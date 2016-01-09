@@ -1,15 +1,13 @@
 from flask.ext.login import LoginManager
 
-from app import app 
-from .database import session
+from app import app
 from .models import User
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-
 login_manager.login_view = "login"
 login_manager.login_message_category = "danger"
 
 @login_manager.user_loader
 def load_user(id):
-    return session.query(User).get(int(id))
+    return User.query.get(int(id))

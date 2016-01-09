@@ -1,5 +1,3 @@
-import os
-
 from livereload import Server
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
@@ -7,7 +5,7 @@ from getpass import getpass
 from werkzeug.security import generate_password_hash
 
 from app import app, db
-from app.models import Brand, Category, SubCategory, Product
+from app.models import Brand, Category, Subcategory, Product
 from app.models import User
 
 
@@ -24,31 +22,44 @@ def run():
 
 @manager.command
 def seed():
-    for brand_name in ['Dior', 'BY TERRY', 'Too Faced', 'Charlotte Tillbury']:
+    ''' Brands '''
+    for brand_name in [
+            'Dior',
+            'BY TERRY',
+            'Too Faced',
+            'Charlotte Tillbury'
+        ]:
         brand = Brand(name=brand_name)
         db.session.add(brand)
         db.session.commit()
-    for category_name in ['Blush', 'Bronzer', 'Concealer', 'Eyes',
-                          'Highlighters', 'Lips', 'Palettes', 'Skincare']:
+    ''' Category '''
+    for category_name in [
+            'Blush',
+            'Bronzer',
+            'Concealer',
+            'Eyes',
+            'Highlighters',
+            'Lips',
+            'Palettes',
+            'Skincare'
+        ]:
         category = Category(name=category_name)
         db.session.add(category)
-        db.session.commit()
-
-    eyes = session.query(Category).filter_by(name="Eyes").first()
-    for sub_category_name in ['Brows', 'Eye Primers', 'Eyeshadow',
-                              'Eyeliner', 'Mascara']:
-        sub_category = SubCategory(name=sub_category_name)
-        eyes.sub_categories.append(sub_category)
-        db.session.add(sub_category)
-        db.session.commit()
+    db.session.commit()
+    ''' Subcategory '''
+    eyes = Category.query.filter_by(name="Eyes").first()
+    for subcategory_name in ['Eyeliner', 'Mascara']:
+        subcategory = Subcategory(name=subcategory_name)
+        eyes.subcategories.append(subcategory)
+        db.session.add(subcategory)
+    db.session.commit()
 
 @manager.command
 def add_user():
     name = raw_input("Name: ")
-    if session.query(User).filter_by(username=name).first():
+    if User.query.filter_by(username=name).first():
         print "User already exists."
         return
-
     password = ""
     password_2 = ""
     while not (password and password_2) or password != password_2:
@@ -61,7 +72,7 @@ def add_user():
 @manager.command
 def reset_pw():
     name = raw_input("Name: ")
-    user = session.query(User).filter_by(username=name).first()
+    user = User.query.filter_by(username=name).first()
     if user:
         password = ""
         password_2 = ""
@@ -81,6 +92,7 @@ class DB(object):
 
 migrate = Migrate(app, DB(db.metadata))
 manager.add_command('db', MigrateCommand)
+
 
 if __name__ == "__main__":
     manager.run()

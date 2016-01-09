@@ -6,11 +6,11 @@
     {{ form.csrf_token }}
     <div class="row">
       <div class="input-field col s6">
-        {{ macros.render_select(categories, "category") }}
+        {{ form.category(class="onload-subcategory") }}
         <label for="category">Current Categories</label>
       </div>
       <div class="input-field col s6">
-        {{ form.sub_category }}
+        {{ form.subcategory }}
         <label for="subcategory">Current Subcategories</label>
         <p class="add-subcategory"><a href="#">
           Add new subcategory to <span></span></a></p>
@@ -22,8 +22,8 @@
         {{ form.name.label }}
       </div>
       <div class="input-field col s6 subcategory-input">
-        {{ form.sub_categories(disabled=True) }}
-        {{ form.sub_categories.label }}
+        {{ form.subcategories(disabled=True) }}
+        {{ form.subcategories.label }}
         <p class="close-subcategory"><a href="#">
           Close</a></p>
       </div>

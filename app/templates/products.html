@@ -1,22 +1,47 @@
-{% import "macros.html" as macros %}
 {% extends "base.html" %}
-{% block body %}
-<h1>Products</h1>
-<table class="highlight striped responsive-table">
-  <thead>
-    <tr>
-      <th>Category</th>
-      <th>Brand</th>
-      <th>Product</th>
-      <th>Quantity</th>
-      <th>Price</th>
-      <th>Notes</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for product in products -%}
-  {{ macros.render_product(product) }}
-  {%- endfor %}
-  </tbody>
-</table>
+{% from "macros.html" import btn_add %}
+
+{% set page_title = 'Products' %}
+
+{% block title %}
+{{ page_title }}
 {% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col s12">
+  <table class="card-panel highlight bordered">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Brand</th>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for product in products -%}
+      <tr class="product-id-{{ product.id }}">
+        <td class="product-category">{{ product.category.name }}
+            {% if product.subcategory.name %}, {{ product.subcategory.name }}
+            {% endif %}
+        </td>
+        <td class="product-brand"><a href="#!"
+            onclick="getProductByIdModal({{product.id}})">
+            {{ product.brand.name }}</a></td>
+        <td class="product-name-color">
+          <a href="{{ url_for('product_get', id=product.id) }}">
+            {{ product.name }}, {{ product.color }}</a>
+        </td>
+        <td class="product-quantity">{{ product.quantity }}</td>
+        <td class="product-price">{{ product.price or '' }}</td>
+        <td class="product-notes">{{ product.notes or '' }}</td>
+      </tr>
+    {%- endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock body %}
